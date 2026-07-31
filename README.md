@@ -24,4 +24,3 @@ Gemini is optional: with no AI key, Roamwise provides a deterministic demo itine
 For Supabase, paste both URLs from **Connect → ORM → Prisma**: the transaction-pooler URL (port `6543`) as `DATABASE_URL`, and the session-pooler URL (port `5432`) as `DIRECT_URL`. Prisma uses the session-pooler URL for queries and schema changes.
 
 The public Nominatim service is used only for a user-triggered destination lookup and responses are cached for a day. Keep usage below its [one-request-per-second limit](https://operations.osmfoundation.org/policies/nominatim/) if you deploy this publicly.
-# Roamwise

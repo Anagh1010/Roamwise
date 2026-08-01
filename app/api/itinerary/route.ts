@@ -17,6 +17,11 @@ export async function POST(request: Request) {
   const parsed = requestSchema.safeParse(json);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid trip details" }, { status: 400 });
 
-  const result = await buildItinerary(parsed.data);
-  return NextResponse.json(result);
+  try {
+    const result = await buildItinerary(parsed.data);
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Itinerary request failed", error);
+    return NextResponse.json({ error: error instanceof Error ? error.message : "The AI itinerary could not be completed. Please try again." }, { status: 502 });
+  }
 }

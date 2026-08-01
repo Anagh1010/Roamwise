@@ -19,7 +19,7 @@ npm run dev
 | Place coordinates | OpenStreetMap Nominatim | No key required |
 | Saved trips | [Supabase Free](https://supabase.com/pricing) PostgreSQL | `DATABASE_URL` |
 
-Gemini is optional: with no AI key, Roamwise provides a deterministic demo itinerary. The AI route uses Gemini's `gemini-3.5-flash-lite` model by default; set `GEMINI_MODEL` only if you want to select a different Gemini model. Keep the variables in the root `.env` file—both Next.js and Prisma load it.
+Gemini is optional: with no AI key, Roamwise provides a deterministic demo itinerary. The AI route uses Gemini's `gemini-3.5-flash` model by default; set `GEMINI_MODEL` only if you want to select a different Gemini model. Keep the variables in the root `.env` file—both Next.js and Prisma load it.
 
 For Supabase, paste both URLs from **Connect → ORM → Prisma**: the transaction-pooler URL (port `6543`) as `DATABASE_URL`, and the session-pooler URL (port `5432`) as `DIRECT_URL`. Prisma uses the session-pooler URL for queries and schema changes.
 

@@ -6,3 +6,4 @@ node_modules
 generated/
 .DS_Store
 tsconfig.tsbuildinfo
+ai-travel-planner-features.md.pdf

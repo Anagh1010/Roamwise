@@ -5,3 +5,4 @@ node_modules
 *.log
 generated/
 .DS_Store
+tsconfig.tsbuildinfo

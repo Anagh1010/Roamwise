@@ -1,9 +1,11 @@
 import type { Itinerary, PlannerInput } from "./types";
+import { formatCurrency } from "./currency";
 
 const formatDate = (date: Date) =>
   new Intl.DateTimeFormat("en", { weekday: "short", month: "short", day: "numeric" }).format(date);
 
 export function createDemoItinerary(input: PlannerInput): Itinerary {
+  const currency = input.currency || "USD";
   const start = new Date(`${input.startDate}T12:00:00`);
   const end = new Date(`${input.endDate}T12:00:00`);
   const days = Math.max(1, Math.round((end.getTime() - start.getTime()) / 86_400_000) + 1);
@@ -11,10 +13,12 @@ export function createDemoItinerary(input: PlannerInput): Itinerary {
   const leadInterest = input.interests[0] || "local culture";
   const light = input.pace === "Slow";
   const full = input.pace === "Fast";
+  const formattedBudget = formatCurrency(input.budget, currency);
 
   return {
     title: `${days}-day ${input.destination} escape`,
-    overview: `A ${input.pace.toLowerCase()} itinerary shaped around ${input.interests.join(", ") || "your curiosities"}, with room to wander and stay within your $${input.budget.toLocaleString()} budget.`,
+    overview: `A ${input.pace.toLowerCase()} itinerary shaped around ${input.interests.join(", ") || "your curiosities"}, with room to wander and stay within your ${formattedBudget} budget.`,
+    currency,
     totalEstimatedCost: Math.min(input.budget, dailyBudget * days),
     packingTips: ["Comfortable walking shoes", "A reusable water bottle", "One layer for changing evenings"],
     days: Array.from({ length: days }, (_, index) => {

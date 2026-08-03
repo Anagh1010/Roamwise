@@ -3,6 +3,7 @@ export type PlannerInput = {
   startDate: string;
   endDate: string;
   budget: number;
+  currency?: string;
   pace: "Slow" | "Balanced" | "Fast";
   interests: string[];
   accessibility?: string;
@@ -28,7 +29,9 @@ export type DayPlan = {
 export type Itinerary = {
   title: string;
   overview: string;
+  currency?: string;
   days: DayPlan[];
   totalEstimatedCost: number;
   packingTips: string[];
 };
+

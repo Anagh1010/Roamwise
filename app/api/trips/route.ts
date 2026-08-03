@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthenticatedUser } from "@/lib/supabase";
 
 const activitySchema = z.object({ time: z.string(), title: z.string(), place: z.string(), description: z.string(), kind: z.string(), cost: z.number(), duration: z.string() });
-const itinerarySchema = z.object({ title: z.string(), overview: z.string(), totalEstimatedCost: z.number(), packingTips: z.array(z.string()), days: z.array(z.object({ day: z.number(), date: z.string(), theme: z.string(), activities: z.array(activitySchema) })) });
+const itinerarySchema = z.object({ title: z.string(), overview: z.string(), currency: z.string().optional().default("USD"), totalEstimatedCost: z.number(), packingTips: z.array(z.string()), days: z.array(z.object({ day: z.number(), date: z.string(), theme: z.string(), activities: z.array(activitySchema) })) });
 const tripSchema = z.object({ destination: z.string().min(2), startDate: z.string().date(), endDate: z.string().date(), budget: z.number().int(), pace: z.string(), interests: z.array(z.string()), accessibility: z.string().optional(), itinerary: itinerarySchema });
 
 export async function POST(request: Request) {

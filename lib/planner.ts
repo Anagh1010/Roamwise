@@ -3,16 +3,28 @@ import { createDemoItinerary } from "./demo-itinerary";
 import type { Itinerary, PlannerInput } from "./types";
 
 export const itinerarySchema = z.object({
-  title: z.string(), overview: z.string(), totalEstimatedCost: z.number().finite(), packingTips: z.array(z.string()),
-  days: z.array(z.object({ day: z.number().int().positive(), date: z.string(), theme: z.string(), activities: z.array(z.object({
-    time: z.string(), title: z.string(), place: z.string(), description: z.string(),
-    kind: z.enum(["stay", "food", "explore", "move"]), cost: z.number().finite(), duration: z.string()
-  })) }))
+  title: z.string(),
+  overview: z.string(),
+  currency: z.string().optional().default("USD"),
+  totalEstimatedCost: z.number().finite(),
+  packingTips: z.array(z.string()),
+  days: z.array(z.object({
+    day: z.number().int().positive(),
+    date: z.string(),
+    theme: z.string(),
+    activities: z.array(z.object({
+      time: z.string(),
+      title: z.string(),
+      place: z.string(),
+      description: z.string(),
+      kind: z.enum(["stay", "food", "explore", "move"]),
+      cost: z.number().finite(),
+      duration: z.string()
+    }))
+  }))
 });
 
 // Gemini API response schemas — enforces complete, valid JSON output at the API level.
-// With responseSchema set, the model is structurally constrained to produce conforming JSON;
-// it cannot truncate or omit required fields.
 const activityResponseSchema = {
   type: "OBJECT",
   properties: {
@@ -43,11 +55,12 @@ const itineraryResponseSchema = {
   properties: {
     title: { type: "STRING" },
     overview: { type: "STRING" },
+    currency: { type: "STRING" },
     totalEstimatedCost: { type: "NUMBER" },
     packingTips: { type: "ARRAY", items: { type: "STRING" } },
     days: { type: "ARRAY", items: dayResponseSchema },
   },
-  required: ["title", "overview", "totalEstimatedCost", "packingTips", "days"],
+  required: ["title", "overview", "currency", "totalEstimatedCost", "packingTips", "days"],
 };
 
 const revisionResponseSchema = {
@@ -85,9 +98,10 @@ export async function reviseItinerary(input: RevisionInput): Promise<{ itinerary
     itinerary: itinerarySchema
   });
 
+  const currency = input.itinerary.currency || "USD";
   try {
-    const system = "You are an expert travel designer editing an existing itinerary. Return only valid JSON. Make the smallest practical change that fulfills the request. Preserve days, dates, and any unaffected activities. Keep activities geographically sensible, prices in USD per person, and the total cost at or below the trip budget unless the user explicitly asks otherwise.";
-    const prompt = `Trip destination: ${input.destination}\nBudget: $${input.budget}\nUser request: ${input.request}\nCurrent itinerary: ${JSON.stringify(input.itinerary)}`;
+    const system = `You are an expert travel designer editing an existing itinerary. Return only valid JSON. Make the smallest practical change that fulfills the request. Preserve days, dates, and any unaffected activities. Keep activities geographically sensible, prices in ${currency} per person, and the total cost at or below the trip budget unless the user explicitly asks otherwise. Set "currency": "${currency}" in the itinerary object.`;
+    const prompt = `Trip destination: ${input.destination}\nBudget: ${currency} ${input.budget}\nUser request: ${input.request}\nCurrent itinerary: ${JSON.stringify(input.itinerary)}`;
     const model = process.env.GEMINI_MODEL || "gemini-3.5-flash";
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: "POST",
@@ -105,7 +119,8 @@ export async function reviseItinerary(input: RevisionInput): Promise<{ itinerary
     if (parsed.data.itinerary.days.length !== input.itinerary.days.length || parsed.data.itinerary.days.some((day, index) => day.day !== input.itinerary.days[index]?.day || day.date !== input.itinerary.days[index]?.date)) {
       throw new Error("The AI response changed the trip dates. Please try again.");
     }
-    return parsed.data;
+    const finalItinerary: Itinerary = { ...parsed.data.itinerary, currency };
+    return { ...parsed.data, itinerary: finalItinerary };
   } catch (error) {
     console.error("AI itinerary revision failed", error);
     throw error instanceof Error ? error : new Error("Could not revise this itinerary.");
@@ -114,9 +129,10 @@ export async function reviseItinerary(input: RevisionInput): Promise<{ itinerary
 
 export async function buildItinerary(input: PlannerInput): Promise<{ itinerary: Itinerary; source: "ai" | "demo" }> {
   if (!process.env.GEMINI_API_KEY) return { itinerary: createDemoItinerary(input), source: "demo" };
+  const currency = input.currency || "USD";
   try {
-    const system = "You are an expert travel designer. Return only valid JSON. Create practical itinerary activities near each other. Prices are USD per person.";
-    const prompt = `Create a travel itinerary for this trip: ${JSON.stringify(input)}`;
+    const system = `You are an expert travel designer. Return only valid JSON. Create practical itinerary activities near each other. Prices are in ${currency} per person. Always include "currency": "${currency}" in your JSON response.`;
+    const prompt = `Create a travel itinerary for this trip in ${currency}: ${JSON.stringify(input)}`;
     const model = process.env.GEMINI_MODEL || "gemini-3.5-flash";
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: "POST",
@@ -134,7 +150,8 @@ export async function buildItinerary(input: PlannerInput): Promise<{ itinerary: 
       console.error("AI itinerary validation failed", parsed.error.issues.map((issue) => ({ path: issue.path.join("."), message: issue.message })));
       throw new Error("The AI response did not contain a valid itinerary.");
     }
-    return { itinerary: parsed.data, source: "ai" };
+    const finalItinerary: Itinerary = { ...parsed.data, currency };
+    return { itinerary: finalItinerary, source: "ai" };
   } catch (error) {
     console.error("AI itinerary generation failed", error);
     throw new Error("The AI itinerary could not be completed. Please try again.");

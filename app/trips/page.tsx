@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { ArrowUpRight, CalendarDays, Compass, LoaderCircle, MapPin, Sparkles } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Compass, LoaderCircle, MapPin, Sparkles, Trash2 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { getSupabaseClient, hasSupabaseAuth } from "@/lib/supabase";
 
@@ -24,6 +24,7 @@ export default function TripsPage() {
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [trips, setTrips] = useState<SavedTrip[]>([]);
   const [loading, setLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [authMode, setAuthMode] = useState<"signIn" | "signUp">("signIn");
   const [authEmail, setAuthEmail] = useState("");
@@ -59,6 +60,30 @@ export default function TripsPage() {
     return () => { cancelled = true; };
   }, [user]);
 
+  async function deleteTrip(event: React.MouseEvent, tripId: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!confirm("Are you sure you want to delete this trip?")) return;
+    setDeletingId(tripId);
+    try {
+      const { data: { session } } = await getSupabaseClient().auth.getSession();
+      if (!session) throw new Error("Your session has expired.");
+      const response = await fetch(`/api/trips/${tripId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${session.access_token}` }
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Could not delete trip.");
+      }
+      setTrips((prev) => prev.filter((t) => t.id !== tripId));
+    } catch (cause) {
+      alert(cause instanceof Error ? cause.message : "Could not delete trip.");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   async function submitAuth(event: FormEvent) {
     event.preventDefault();
     if (!hasSupabaseAuth) { setAuthMessage("Add your Supabase URL and publishable key to .env first."); return; }
@@ -84,7 +109,7 @@ export default function TripsPage() {
       {user && loading && <div className="trips-status"><LoaderCircle className="spin" size={22}/> Loading your saved trips…</div>}
       {user && !loading && error && <div className="trips-status trips-error"><p>{error}</p><button className="secondary" onClick={() => setUser({ ...user })}>Try again</button></div>}
       {user && !loading && !error && trips.length === 0 && <div className="empty-trips"><MapPin size={28}/><h2>No saved trips yet.</h2><p>Plan your next escape, then save the itinerary here for later.</p><Link href="/#planner" className="primary">Plan a trip <ArrowUpRight size={16}/></Link></div>}
-      {user && !loading && !error && trips.length > 0 && <div className="trip-grid">{trips.map((trip) => <Link href={`/trips/${trip.id}`} className="trip-card" key={trip.id}><div className="trip-card-top"><span><MapPin size={15}/>{trip.destination}</span><ArrowUpRight size={18}/></div><h2>{trip.itinerary?.title || `A trip to ${trip.destination}`}</h2><p className="trip-dates"><CalendarDays size={15}/>{formatDate(trip.startDate)} – {formatDate(trip.endDate)}</p><div className="trip-card-bottom"><span>${trip.budget.toLocaleString()} budget</span><span>Updated {formatDate(trip.updatedAt)}</span></div><div className="trip-tags">{trip.interests.slice(0, 3).map((interest) => <span key={interest}>{interest}</span>)}</div></Link>)}</div>}
+      {user && !loading && !error && trips.length > 0 && <div className="trip-grid">{trips.map((trip) => <Link href={`/trips/${trip.id}`} className="trip-card" key={trip.id}><div className="trip-card-top"><span><MapPin size={15}/>{trip.destination}</span><div className="trip-card-actions"><button type="button" className="delete-trip-btn" title="Delete trip" onClick={(e) => deleteTrip(e, trip.id)} disabled={deletingId === trip.id}>{deletingId === trip.id ? <LoaderCircle className="spin" size={14}/> : <Trash2 size={14}/>}</button><ArrowUpRight size={18}/></div></div><h2>{trip.itinerary?.title || `A trip to ${trip.destination}`}</h2><p className="trip-dates"><CalendarDays size={15}/>{formatDate(trip.startDate)} – {formatDate(trip.endDate)}</p><div className="trip-card-bottom"><span>${trip.budget.toLocaleString()} budget</span><span>Updated {formatDate(trip.updatedAt)}</span></div><div className="trip-tags">{trip.interests.slice(0, 3).map((interest) => <span key={interest}>{interest}</span>)}</div></Link>)}</div>}
     </section>
   </main>;
 }

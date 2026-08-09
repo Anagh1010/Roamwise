@@ -15,12 +15,50 @@ export function createDemoItinerary(input: PlannerInput): Itinerary {
   const full = input.pace === "Fast";
   const formattedBudget = formatCurrency(input.budget, currency);
 
-  return {
+  const itinerary: Itinerary = {
     title: `${days}-day ${input.destination} escape`,
     overview: `A ${input.pace.toLowerCase()} itinerary shaped around ${input.interests.join(", ") || "your curiosities"}, with room to wander and stay within your ${formattedBudget} budget.`,
     currency,
     totalEstimatedCost: Math.min(input.budget, dailyBudget * days),
     packingTips: ["Comfortable walking shoes", "A reusable water bottle", "One layer for changing evenings"],
+    briefing: {
+      language: "Local language",
+      locale: "Check destination-specific guidance",
+      source: "demo",
+      generatedAt: new Date().toISOString(),
+      culturalEtiquette: [
+        "Greet locals with a smile and a polite hello in the local language",
+        "Dress modestly when visiting religious sites — cover shoulders and knees",
+        "Ask before photographing people or sacred places",
+        "Keep your voice down in residential neighbourhoods, especially in the evenings",
+        "Avoid public displays of affection in conservative areas",
+      ],
+      localCustoms: [
+        "Tipping 10–15% is appreciated at sit-down restaurants; less expected at cafés",
+        "Mealtimes tend to run later than you might be used to — plan accordingly",
+        "Locals often greet with two cheek kisses; follow their lead",
+        "Shops may close for a few hours in the early afternoon",
+        "Haggling is common in markets; in shops, prices are usually fixed",
+      ],
+      usefulPhrases: [
+        { phrase: "Hello", translation: "A warm local greeting", pronunciation: "Check a phrasebook for the local script" },
+        { phrase: "Thank you", translation: "Express gratitude", pronunciation: "Locals always appreciate the effort" },
+        { phrase: "Please", translation: "Polite request", pronunciation: "Goes a long way with service staff" },
+        { phrase: "Where is…?", translation: "Ask for directions", pronunciation: "Point to a map if unsure" },
+        { phrase: "How much?", translation: "Ask for a price", pronunciation: "Useful in markets" },
+        { phrase: "Do you speak English?", translation: "Find a helpful local", pronunciation: "" },
+        { phrase: "I'd like this, please", translation: "Order or purchase", pronunciation: "Pair with pointing" },
+        { phrase: "Excuse me", translation: "Get attention politely", pronunciation: "" },
+      ],
+      safetyAdvice: [
+        "Keep a digital and physical copy of your passport and travel insurance",
+        "Use hotel safes for valuables and avoid displaying expensive items in crowds",
+        "Stick to well-lit, busy streets at night and share your location with someone you trust",
+        "Only use licensed taxis or reputable ride-hailing apps — agree on the fare first",
+        "Stay hydrated and apply sunscreen, especially in warm or high-altitude destinations",
+        "Check your government's travel advisories before departure for up-to-date safety notes",
+      ],
+    },
     days: Array.from({ length: days }, (_, index) => {
       const date = new Date(start);
       date.setDate(start.getDate() + index);
@@ -71,4 +109,6 @@ export function createDemoItinerary(input: PlannerInput): Itinerary {
       };
     })
   };
+  if (input.includeBriefing === false) delete itinerary.briefing;
+  return itinerary;
 }

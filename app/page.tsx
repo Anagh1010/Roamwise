@@ -1,11 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, Compass, DollarSign, Footprints, GripVertical, LoaderCircle, MapPin, Menu, Plus, Sparkles, Star, Utensils } from "lucide-react";
+import { ArrowUpRight, BookOpen, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, DollarSign, Footprints, Globe, GripVertical, Heart, Languages, LoaderCircle, MapPin, Menu, Plus, ShieldCheck, Sparkles, Star, Utensils } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import type { Itinerary, PlannerInput } from "@/lib/types";
 import { getSupabaseClient, hasSupabaseAuth } from "@/lib/supabase";
 import { CURRENCIES, formatCurrency, getCurrencySymbol } from "@/lib/currency";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const interestOptions = ["Food & drink", "Art & culture", "Nature", "History", "Shopping", "Nightlife"];
 const today = new Date();
@@ -19,8 +20,9 @@ export default function Home() {
     destination: "Lisbon, Portugal",
     startDate: iso(today),
     endDate: iso(later),
-    budget: 1200,
+    budget: 2000,
     currency: "USD",
+    includeBriefing: true,
     pace: "Balanced",
     interests: ["Food & drink", "Art & culture"]
   });
@@ -30,6 +32,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [briefingOpen, setBriefingOpen] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signIn" | "signUp">("signIn");
@@ -103,7 +106,7 @@ export default function Home() {
   const activeCurrency = itinerary?.currency || form.currency || "USD";
 
   return <main>
-    <nav className="nav shell"><a className="brand" href="#top"><span className="brand-mark"><Compass size={19}/></span>roamwise</a><div className="nav-links"><a href="#planner">Plan a trip</a><a href="#how">How it works</a><a href="/trips">My trips</a></div><button className="menu" aria-label="Open menu"><Menu size={21}/></button>{user ? <button onClick={signOut} className="sign-in">Sign out</button> : <button onClick={() => { setAuthMode("signIn"); setAuthOpen(true); setAuthMessage(""); }} className="sign-in">Sign in <ArrowUpRight size={15}/></button>}</nav>
+    <nav className="nav shell"><a className="brand" href="#top"><span className="brand-mark"><Compass size={19}/></span>roamwise</a><div className="nav-links"><a href="#planner">Plan a trip</a><a href="#how">How it works</a><a href="/trips">My trips</a></div><button className="menu" aria-label="Open menu"><Menu size={21}/></button><div className="nav-actions"><ThemeToggle/>{user ? <button onClick={signOut} className="sign-in">Sign out</button> : <button onClick={() => { setAuthMode("signIn"); setAuthOpen(true); setAuthMessage(""); }} className="sign-in">Sign in <ArrowUpRight size={15}/></button>}</div></nav>
 
     <section id="top" className="hero shell">
       <div className="hero-copy"><p className="eyebrow"><Sparkles size={14}/> PERSONAL TRAVEL DESIGNER</p><h1>Trips that feel<br/><i>like you.</i></h1><p className="lede">Tell us what matters. We’ll shape the days, find the rhythm, and leave room for your best detours.</p><a href="#planner" className="text-link">Start planning <ArrowUpRight size={18}/></a></div>
@@ -117,6 +120,7 @@ export default function Home() {
         <label className="field budget"><span>Budget</span><div><span className="currency-symbol">{getCurrencySymbol(form.currency || "USD")}</span><input type="number" min="10" value={form.budget} onChange={(e) => setForm({...form, budget: Number(e.target.value)})} required/><select className="currency-select" value={form.currency || "USD"} onChange={(e) => setForm({...form, currency: e.target.value})}>{CURRENCIES.map((c) => <option key={c.code} value={c.code}>{c.label}</option>)}</select></div></label>
         <div className="form-row"><div><span className="label">I’m into</span><div className="chips">{interestOptions.map((interest) => <button type="button" className={form.interests.includes(interest) ? "chip active" : "chip"} onClick={() => toggleInterest(interest)} key={interest}>{form.interests.includes(interest) && <Check size={13}/>} {interest}</button>)}</div></div><div><span className="label">Travel pace</span><div className="segmented">{(["Slow", "Balanced", "Fast"] as const).map((pace) => <button type="button" onClick={() => setForm({...form, pace})} className={form.pace === pace ? "selected" : ""} key={pace}>{pace}</button>)}</div></div></div>
         <label className="access"><span>Anything we should know? <em>(optional)</em></span><input value={custom} onChange={(e) => { setCustom(e.target.value); setForm({...form, accessibility: e.target.value}); }} placeholder="Accessibility needs, special occasion, travelling with kids..."/></label>
+        <label className="briefing-option"><input type="checkbox" checked={form.includeBriefing !== false} onChange={(event) => setForm({...form, includeBriefing: event.target.checked})}/><span><BookOpen size={17}/><b>Include AI travel briefing</b><small>Etiquette, local customs, useful phrases, and safety guidance.</small></span></label>
         {error && <p className="error">{error}</p>}<button className="primary" disabled={loading}>{loading ? <><LoaderCircle className="spin" size={18}/> Building your trip</> : <><Sparkles size={18}/> Craft my itinerary</>}</button>
       </form>
     </div></section>
@@ -129,6 +133,32 @@ export default function Home() {
         <button className="add-activity"><Plus size={18}/> Add an activity</button>
       </div>
       <div className="trip-footer"><div><b>Pack lightly, wander deeply.</b><span>{itinerary.packingTips.join(" · ")}</span>{saveMessage && <small className="save-message">{saveMessage}</small>}</div><div className="trip-actions"><a className="map-link" href={mapUrl} target="_blank" rel="noreferrer"><MapPin size={16}/> Open map</a><button onClick={saveTrip} disabled={saving} className="primary small"><Star size={16}/>{saving ? "Saving…" : "Save this trip"}</button></div></div>
+      {itinerary.briefing && <div className="briefing">
+        <button className="briefing-toggle" onClick={() => setBriefingOpen((o) => !o)} aria-expanded={briefingOpen}>
+          <span><BookOpen size={16}/> Travel Briefing</span>
+          {briefingOpen ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
+        </button>
+        {briefingOpen && <div className="briefing-cards">
+          <div className="briefing-card">
+            <div className="briefing-card-head"><Heart size={18}/><h4>Cultural Etiquette</h4></div>
+            <ul>{itinerary.briefing.culturalEtiquette.map((item, i) => <li key={i}>{item}</li>)}</ul>
+          </div>
+          <div className="briefing-card">
+            <div className="briefing-card-head"><Globe size={18}/><h4>Local Customs</h4></div>
+            <ul>{itinerary.briefing.localCustoms.map((item, i) => <li key={i}>{item}</li>)}</ul>
+          </div>
+          <div className="briefing-card briefing-card--phrases">
+            <div className="briefing-card-head"><Languages size={18}/><h4>Useful Phrases</h4></div>
+            <table className="phrase-table"><thead><tr><th>Phrase</th><th>Translation</th><th>Pronunciation</th></tr></thead>
+              <tbody>{itinerary.briefing.usefulPhrases.map((p, i) => <tr key={i}><td>{p.phrase}</td><td>{p.translation}</td><td>{p.pronunciation || "—"}</td></tr>)}</tbody>
+            </table>
+          </div>
+          <div className="briefing-card">
+            <div className="briefing-card-head"><ShieldCheck size={18}/><h4>Safety Advice</h4></div>
+            <ul>{itinerary.briefing.safetyAdvice.map((item, i) => <li key={i}>{item}</li>)}</ul>
+          </div>
+        </div>}
+      </div>}
     </section>}
 
     <section id="how" className="how shell"><p className="eyebrow"><Sparkles size={14}/> HOW IT WORKS</p><h2>Good planning leaves room<br/>for the unexpected.</h2><div className="steps"><div><b>01</b><h3>Tell us your style</h3><p>Dates, budget, curiosities, and the pace that feels right.</p></div><div><b>02</b><h3>Get a flexible plan</h3><p>A thoughtful day-by-day route, not a minute-by-minute mandate.</p></div><div><b>03</b><h3>Make it yours</h3><p>Move things around and follow the recommendations that spark joy.</p></div></div></section>

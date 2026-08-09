@@ -8,6 +8,7 @@ const requestSchema = z.object({
   endDate: z.string().date(),
   budget: z.number().int().min(10).max(10_000_000),
   currency: z.string().optional().default("USD"),
+  includeBriefing: z.boolean().optional().default(true),
   pace: z.enum(["Slow", "Balanced", "Fast"]),
   interests: z.array(z.string()).max(8),
   accessibility: z.string().max(280).optional()

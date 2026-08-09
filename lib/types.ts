@@ -4,6 +4,7 @@ export type PlannerInput = {
   endDate: string;
   budget: number;
   currency?: string;
+  includeBriefing?: boolean;
   pace: "Slow" | "Balanced" | "Fast";
   interests: string[];
   accessibility?: string;
@@ -26,6 +27,17 @@ export type DayPlan = {
   activities: Activity[];
 };
 
+export type TravelBriefing = {
+  language?: string;
+  locale?: string;
+  generatedAt?: string;
+  source?: "ai" | "demo";
+  culturalEtiquette: string[];
+  localCustoms: string[];
+  usefulPhrases: { phrase: string; translation: string; pronunciation?: string }[];
+  safetyAdvice: string[];
+};
+
 export type Itinerary = {
   title: string;
   overview: string;
@@ -33,5 +45,5 @@ export type Itinerary = {
   days: DayPlan[];
   totalEstimatedCost: number;
   packingTips: string[];
+  briefing?: TravelBriefing;
 };
-

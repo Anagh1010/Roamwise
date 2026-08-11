@@ -7,6 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import { getSupabaseClient, hasSupabaseAuth } from "@/lib/supabase";
 import { formatCurrency } from "@/lib/currency";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { AccountMenu } from "@/components/account-menu";
 
 type SavedTrip = {
   id: string;
@@ -107,7 +108,7 @@ export default function TripsPage() {
       <nav className="nav shell">
         <Link className="brand" href="/"><span className="brand-mark"><Compass size={19}/></span>roamwise</Link>
         <div className="nav-links"><Link href="/#planner">Plan a trip</Link><Link href="/#how">How it works</Link><Link href="/trips" aria-current="page">My trips</Link></div>
-        <div className="nav-actions"><ThemeToggle/>{user ? <button onClick={signOut} className="sign-in">Sign out</button> : <Link className="sign-in" href="/">Home <ArrowUpRight size={15}/></Link>}</div>
+        <div className="nav-actions"><ThemeToggle/>{user ? <AccountMenu email={user.email} onSignOut={signOut}/> : <Link className="sign-in" href="/">Home <ArrowUpRight size={15}/></Link>}</div>
       </nav>
       <section className="trips-hero">
         <div className="shell">

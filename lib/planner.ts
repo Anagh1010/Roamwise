@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createDemoItinerary } from "./demo-itinerary";
-import type { Itinerary, PlannerInput } from "./types";
+import { packingCategories, type Itinerary, type PlannerInput } from "./types";
 
 // ── Zod schemas ───────────────────────────────────────────────────────────────
 
@@ -27,6 +27,12 @@ export const itinerarySchema = z.object({
   currency: z.string().optional().default("USD"),
   totalEstimatedCost: z.number().finite(),
   packingTips: z.array(z.string()),
+  packingList: z.array(z.object({
+    category: z.enum(packingCategories),
+    item: z.string().min(1).max(120),
+    essential: z.boolean(),
+    checked: z.boolean().optional().default(false),
+  })).max(48).default([]),
   briefing: briefingSchema.optional(),
   days: z.array(z.object({
     day: z.number().int().positive(),
@@ -43,6 +49,8 @@ export const itinerarySchema = z.object({
     }))
   }))
 });
+
+export const packingListSchema = itinerarySchema.shape.packingList;
 
 // ── Gemini API response schemas (enforces complete, valid JSON at API level) ──
 
@@ -94,6 +102,16 @@ const briefingResponseSchema = {
   required: ["language", "locale", "culturalEtiquette", "localCustoms", "usefulPhrases", "safetyAdvice"],
 };
 
+const packingItemResponseSchema = {
+  type: "OBJECT",
+  properties: {
+    category: { type: "STRING", enum: [...packingCategories] },
+    item: { type: "STRING" },
+    essential: { type: "BOOLEAN" },
+  },
+  required: ["category", "item", "essential"],
+};
+
 const itineraryResponseSchema = {
   type: "OBJECT",
   properties: {
@@ -102,15 +120,16 @@ const itineraryResponseSchema = {
     currency: { type: "STRING" },
     totalEstimatedCost: { type: "NUMBER" },
     packingTips: { type: "ARRAY", items: { type: "STRING" } },
+    packingList: { type: "ARRAY", items: packingItemResponseSchema },
     briefing: briefingResponseSchema,
     days: { type: "ARRAY", items: dayResponseSchema },
   },
-  required: ["title", "overview", "currency", "totalEstimatedCost", "packingTips", "briefing", "days"],
+  required: ["title", "overview", "currency", "totalEstimatedCost", "packingTips", "packingList", "briefing", "days"],
 };
 
 const itineraryWithoutBriefingResponseSchema = {
   ...itineraryResponseSchema,
-  required: ["title", "overview", "currency", "totalEstimatedCost", "packingTips", "days"],
+  required: ["title", "overview", "currency", "totalEstimatedCost", "packingTips", "packingList", "days"],
 };
 
 const revisionResponseSchema = {
@@ -195,11 +214,12 @@ export async function reviseItinerary(input: RevisionInput): Promise<{ itinerary
   });
 
   const currency = input.itinerary.currency || "USD";
-  // Preserve existing briefing so revision stays fast and focused
+  // Preserve briefing and checklist so revision stays focused on the requested itinerary change.
   const existingBriefing = input.itinerary.briefing;
+  const existingPackingList = input.itinerary.packingList;
 
   try {
-    const system = `You are an expert travel designer editing an existing itinerary. Return only valid JSON. Make the smallest practical change that fulfills the request. Preserve days, dates, and any unaffected activities. Keep activities geographically sensible, prices in ${currency} per person, and the total cost at or below the trip budget unless the user explicitly asks otherwise. Set "currency": "${currency}" in the itinerary object. Preserve the existing briefing object exactly as provided unless the user's request is specifically about cultural, customs, phrases, or safety information.`;
+    const system = `You are an expert travel designer editing an existing itinerary. Return only valid JSON. Make the smallest practical change that fulfills the request. Preserve days, dates, and any unaffected activities. Keep activities geographically sensible, prices in ${currency} per person, and the total cost at or below the trip budget unless the user explicitly asks otherwise. Set "currency": "${currency}" in the itinerary object. Preserve the existing briefing and packingList objects exactly as provided.`;
     const prompt = `Trip destination: ${input.destination}\nBudget: ${currency} ${input.budget}\nUser request: ${input.request}\nCurrent itinerary: ${JSON.stringify(input.itinerary)}`;
     const model = process.env.GEMINI_MODEL || "gemini-3.5-flash";
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
@@ -223,6 +243,7 @@ export async function reviseItinerary(input: RevisionInput): Promise<{ itinerary
       ...parsed.data.itinerary,
       currency,
       briefing: parsed.data.itinerary.briefing ?? existingBriefing,
+      packingList: existingPackingList,
     };
     return { ...parsed.data, itinerary: finalItinerary };
   } catch (error) {
@@ -238,7 +259,7 @@ export async function buildItinerary(input: PlannerInput): Promise<{ itinerary: 
   const currency = input.currency || "USD";
   try {
     const includeBriefing = input.includeBriefing !== false;
-    const system = `You are an expert travel designer. Return only valid JSON. Create practical itinerary activities near each other. Prices are in ${currency} per person. Always include "currency": "${currency}" in your JSON response.${includeBriefing ? " Also generate a travel briefing for the destination with: culturalEtiquette (specific do's and don'ts, 4-6 items), localCustoms (norms around tipping, greetings, dress, dining, 4-6 items), usefulPhrases (8-10 essential local language phrases with English translation and romanised pronunciation where applicable), and safetyAdvice (practical safety tips specific to the destination, 4-6 items)." : " Do not include a briefing object."}`;
+    const system = `You are an expert travel designer. Return only valid JSON. Create practical itinerary activities near each other. Prices are in ${currency} per person. Always include "currency": "${currency}" in your JSON response. Generate a personalised packingList with 12-24 concise items across these exact categories: Documents & essentials, Clothing, Toiletries & health, Tech, Activity-specific, Optional. Tailor it to the destination, dates, itinerary activities, pace, interests, and accessibility needs. Mark only truly important items as essential. Do not include generic filler or duplicate items.${includeBriefing ? " Also generate a travel briefing for the destination with: culturalEtiquette (specific do's and don'ts, 4-6 items), localCustoms (norms around tipping, greetings, dress, dining, 4-6 items), usefulPhrases (8-10 essential local language phrases with English translation and romanised pronunciation where applicable), and safetyAdvice (practical safety tips specific to the destination, 4-6 items)." : " Do not include a briefing object."}`;
     const prompt = `Create a travel itinerary for this trip in ${currency}: ${JSON.stringify(input)}`;
     const model = process.env.GEMINI_MODEL || "gemini-3.5-flash";
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {

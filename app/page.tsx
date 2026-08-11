@@ -7,6 +7,7 @@ import type { Itinerary, PlannerInput } from "@/lib/types";
 import { getSupabaseClient, hasSupabaseAuth } from "@/lib/supabase";
 import { CURRENCIES, formatCurrency, getCurrencySymbol } from "@/lib/currency";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PackingList } from "@/components/packing-list";
 
 const interestOptions = ["Food & drink", "Art & culture", "Nature", "History", "Shopping", "Nightlife"];
 const today = new Date();
@@ -17,7 +18,7 @@ const kindIcon = { explore: Compass, food: Utensils, move: Footprints, stay: Map
 
 export default function Home() {
   const [form, setForm] = useState<PlannerInput>({
-    destination: "Lisbon, Portugal",
+    destination: "Berlin, Germany",
     startDate: iso(today),
     endDate: iso(later),
     budget: 2000,
@@ -133,6 +134,7 @@ export default function Home() {
         <button className="add-activity"><Plus size={18}/> Add an activity</button>
       </div>
       <div className="trip-footer"><div><b>Pack lightly, wander deeply.</b><span>{itinerary.packingTips.join(" · ")}</span>{saveMessage && <small className="save-message">{saveMessage}</small>}</div><div className="trip-actions"><a className="map-link" href={mapUrl} target="_blank" rel="noreferrer"><MapPin size={16}/> Open map</a><button onClick={saveTrip} disabled={saving} className="primary small"><Star size={16}/>{saving ? "Saving…" : "Save this trip"}</button></div></div>
+      <PackingList items={itinerary.packingList || []} onChange={(packingList) => setItinerary((current) => current ? { ...current, packingList } : current)} />
       {itinerary.briefing && <div className="briefing">
         <button className="briefing-toggle" onClick={() => setBriefingOpen((o) => !o)} aria-expanded={briefingOpen}>
           <span><BookOpen size={16}/> Travel Briefing</span>

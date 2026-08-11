@@ -38,6 +38,16 @@ export type TravelBriefing = {
   safetyAdvice: string[];
 };
 
+export const packingCategories = ["Documents & essentials", "Clothing", "Toiletries & health", "Tech", "Activity-specific", "Optional"] as const;
+export type PackingCategory = (typeof packingCategories)[number];
+
+export type PackingItem = {
+  category: PackingCategory;
+  item: string;
+  essential: boolean;
+  checked?: boolean;
+};
+
 export type Itinerary = {
   title: string;
   overview: string;
@@ -45,5 +55,6 @@ export type Itinerary = {
   days: DayPlan[];
   totalEstimatedCost: number;
   packingTips: string[];
+  packingList: PackingItem[];
   briefing?: TravelBriefing;
 };

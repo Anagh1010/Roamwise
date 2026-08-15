@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, BookOpen, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, DollarSign, Footprints, Globe, GripVertical, Heart, Languages, LoaderCircle, MapPin, Menu, Plus, ShieldCheck, Sparkles, Star, Utensils } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
-import type { Itinerary, PlannerInput } from "@/lib/types";
+import type { Activity, Itinerary, PlannerInput } from "@/lib/types";
 import { getSupabaseClient, hasSupabaseAuth } from "@/lib/supabase";
 import { CURRENCIES, formatCurrency, getCurrencySymbol } from "@/lib/currency";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -45,6 +45,8 @@ export default function Home() {
   const [mapUrl, setMapUrl] = useState("");
   const [error, setError] = useState("");
   const [custom, setCustom] = useState("");
+  const [activityEditorOpen, setActivityEditorOpen] = useState(false);
+  const [newActivity, setNewActivity] = useState<Activity>({ time: "15:00", title: "", place: "", description: "", kind: "explore", cost: 0, duration: "1 hr" });
 
   const nights = useMemo(() => Math.max(1, Math.round((new Date(form.endDate).getTime() - new Date(form.startDate).getTime()) / 86_400_000)), [form.endDate, form.startDate]);
   const toggleInterest = (interest: string) => setForm((old) => ({ ...old, interests: old.interests.includes(interest) ? old.interests.filter((item) => item !== interest) : [...old.interests, interest] }));
@@ -104,6 +106,24 @@ export default function Home() {
 
   async function signOut() { if (hasSupabaseAuth) await getSupabaseClient().auth.signOut(); }
 
+  function openActivityEditor() {
+    setNewActivity({ time: "15:00", title: "", place: form.destination, description: "", kind: "explore", cost: 0, duration: "1 hr" });
+    setActivityEditorOpen(true);
+  }
+
+  function addActivity(event: FormEvent) {
+    event.preventDefault();
+    if (!newActivity.title.trim() || !newActivity.place.trim()) return;
+    setItinerary((current) => {
+      if (!current) return current;
+      const days = current.days.map((item, index) => index === activeDay
+        ? { ...item, activities: [...item.activities, { ...newActivity, title: newActivity.title.trim(), place: newActivity.place.trim(), description: newActivity.description.trim() || "A personal addition to your itinerary." }].sort((a, b) => a.time.localeCompare(b.time)) }
+        : item);
+      return { ...current, days };
+    });
+    setActivityEditorOpen(false);
+  }
+
   const day = itinerary?.days[activeDay];
   const activeCurrency = itinerary?.currency || form.currency || "USD";
 
@@ -132,7 +152,7 @@ export default function Home() {
       <div className="day-tabs">{itinerary.days.map((item, index) => <button onClick={() => setActiveDay(index)} className={index === activeDay ? "tab active" : "tab"} key={item.day}><b>Day {item.day}</b><span>{item.date}</span></button>)}</div>
       <div className="schedule"><div className="day-title"><div><span>DAY {day.day} · {day.date.toUpperCase()}</span><h3>{day.theme}</h3></div><button className="icon-button" aria-label="Previous day" onClick={() => setActiveDay(Math.max(0, activeDay - 1))}><ChevronLeft/></button><button className="icon-button" aria-label="Next day" onClick={() => setActiveDay(Math.min(itinerary.days.length - 1, activeDay + 1))}><ChevronRight/></button></div>
         <div className="timeline">{day.activities.map((activity, index) => { const Icon = kindIcon[activity.kind]; return <article className="activity" key={`${activity.time}-${index}`}><time>{activity.time}</time><div className={`activity-icon ${activity.kind}`}><Icon size={19}/></div><div className="activity-body"><div><h4>{activity.title}</h4><p className="place"><MapPin size={14}/>{activity.place}</p></div><p>{activity.description}</p><div className="activity-meta"><span><Clock3 size={14}/>{activity.duration}</span><span>{formatCurrency(activity.cost, activeCurrency)} est.</span></div></div><button className="drag" aria-label="Reorder activity"><GripVertical size={19}/></button></article>})}</div>
-        <button className="add-activity"><Plus size={18}/> Add an activity</button>
+        <button type="button" className="add-activity" onClick={openActivityEditor}><Plus size={18}/> Add an activity</button>
       </div>
       <div className="trip-footer"><div><b>Pack lightly, wander deeply.</b><span>{itinerary.packingTips.join(" · ")}</span>{saveMessage && <small className="save-message">{saveMessage}</small>}</div><div className="trip-actions"><a className="map-link" href={mapUrl} target="_blank" rel="noreferrer"><MapPin size={16}/> Open map</a><button onClick={saveTrip} disabled={saving} className="primary small"><Star size={16}/>{saving ? "Saving…" : "Save this trip"}</button></div></div>
       <PackingList items={itinerary.packingList || []} onChange={(packingList) => setItinerary((current) => current ? { ...current, packingList } : current)} />
@@ -165,6 +185,7 @@ export default function Home() {
     </section>}
 
     <section id="how" className="how shell"><p className="eyebrow"><Sparkles size={14}/> HOW IT WORKS</p><h2>Good planning leaves room<br/>for the unexpected.</h2><div className="steps"><div><b>01</b><h3>Tell us your style</h3><p>Dates, budget, curiosities, and the pace that feels right.</p></div><div><b>02</b><h3>Get a flexible plan</h3><p>A thoughtful day-by-day route, not a minute-by-minute mandate.</p></div><div><b>03</b><h3>Make it yours</h3><p>Move things around and follow the recommendations that spark joy.</p></div></div></section>
+    {activityEditorOpen && <div className="auth-backdrop" role="dialog" aria-modal="true" aria-labelledby="activity-editor-title"><form className="auth-card activity-editor" onSubmit={addActivity}><button className="auth-close" type="button" onClick={() => setActivityEditorOpen(false)} aria-label="Close">×</button><p className="eyebrow"><Plus size={14}/> DAY {day?.day} ACTIVITY</p><h2 id="activity-editor-title">Add to your day.</h2><p className="auth-copy">Create a personal stop for this itinerary. It will be included when you save the trip.</p><label>Activity name<input value={newActivity.title} onChange={(event) => setNewActivity({ ...newActivity, title: event.target.value })} placeholder="e.g. Sunset walk" required/></label><label>Place<input value={newActivity.place} onChange={(event) => setNewActivity({ ...newActivity, place: event.target.value })} placeholder="Neighbourhood or venue" required/></label><div className="activity-editor-row"><label>Time<input type="time" value={newActivity.time} onChange={(event) => setNewActivity({ ...newActivity, time: event.target.value })} required/></label><label>Duration<input value={newActivity.duration} onChange={(event) => setNewActivity({ ...newActivity, duration: event.target.value })} placeholder="1 hr" required/></label></div><div className="activity-editor-row"><label>Type<select value={newActivity.kind} onChange={(event) => setNewActivity({ ...newActivity, kind: event.target.value as Activity["kind"] })}><option value="explore">Explore</option><option value="food">Food</option><option value="move">Transport</option><option value="stay">Stay</option></select></label><label>Estimated cost<input type="number" min="0" value={newActivity.cost} onChange={(event) => setNewActivity({ ...newActivity, cost: Number(event.target.value) })}/></label></div><label>Description <em>(optional)</em><textarea value={newActivity.description} onChange={(event) => setNewActivity({ ...newActivity, description: event.target.value })} placeholder="What would you like to do?" maxLength={260}/></label><button className="primary auth-submit"><Plus size={16}/> Add activity</button></form></div>}
     {authOpen && <div className="auth-backdrop" role="dialog" aria-modal="true" aria-labelledby="auth-title"><form className="auth-card" onSubmit={submitAuth}><button className="auth-close" type="button" onClick={() => setAuthOpen(false)} aria-label="Close">×</button><p className="eyebrow"><Sparkles size={14}/> YOUR ROAMWISE ACCOUNT</p><h2 id="auth-title">{authMode === "signIn" ? "Welcome back." : "Start saving trips."}</h2><p className="auth-copy">{authMode === "signIn" ? "Sign in to keep your itineraries in one place." : "Create an account to save trips and return to them later."}</p><label>Email<input type="email" autoComplete="email" value={authEmail} onChange={(event) => setAuthEmail(event.target.value)} required/></label><label>Password<input type="password" autoComplete={authMode === "signIn" ? "current-password" : "new-password"} minLength={6} value={authPassword} onChange={(event) => setAuthPassword(event.target.value)} required/></label>{authMessage && <p className="auth-message">{authMessage}</p>}<button className="primary auth-submit" disabled={authLoading}>{authLoading ? "Please wait…" : authMode === "signIn" ? "Sign in" : "Create account"}</button><button className="auth-switch" type="button" onClick={() => { setAuthMode(authMode === "signIn" ? "signUp" : "signIn"); setAuthMessage(""); }}>{authMode === "signIn" ? "New here? Create an account" : "Already have an account? Sign in"}</button></form></div>}
     <footer className="footer"><div className="shell"><a className="brand" href="#top"><span className="brand-mark"><Compass size={19}/></span>roamwise</a><p>Made for the beautifully curious.</p></div></footer>
   </main>;

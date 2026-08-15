@@ -92,6 +92,13 @@ h1,h2,h3,h4,p { margin-top:0; } h1,h2,h3 { letter-spacing:-1.6px; } h1 { font-si
 .theme-toggle:hover { background:var(--surface-raised); border-color:var(--green); transform:translateY(-1px); }
 .account-menu { position:relative; }.account-menu-trigger { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--surface-raised); border-radius:18px; padding:5px 9px; background:var(--surface); color:var(--ink); font-size:10px; font-weight:700; }.account-menu-trigger:hover,.account-menu-trigger[aria-expanded="true"] { border-color:var(--green); color:var(--green); }.account-menu-popover { position:absolute; z-index:30; top:calc(100% + 9px); right:0; width:225px; padding:7px; border:1px solid var(--surface-raised); background:var(--paper); box-shadow:5px 6px 0 #101014; }.account-menu-identity { display:flex; align-items:flex-start; gap:8px; padding:8px; border-bottom:1px solid var(--line); color:var(--green); }.account-menu-identity div { min-width:0; display:grid; gap:2px; }.account-menu-identity b { color:var(--ink); font-size:11px; }.account-menu-identity span { overflow:hidden; color:var(--muted); font-size:10px; text-overflow:ellipsis; white-space:nowrap; }.account-menu-popover>a,.account-menu-popover>button { width:100%; display:flex; align-items:center; gap:7px; padding:8px; border:0; background:transparent; color:var(--ink); font-size:11px; font-weight:600; text-align:left; text-decoration:none; }.account-menu-popover>a:hover,.account-menu-popover>button:hover { background:var(--surface); color:var(--green); }.account-menu-popover>button { color:#f7768e; }
 
+/* ── Activity editor modal ─────────────────────────────────────────────── */
+.activity-editor { width:min(100%,440px); }
+.activity-editor label { display:block; color:#7dcfff; font-size:11px; font-weight:700; margin:12px 0 0; }
+.activity-editor input,.activity-editor select,.activity-editor textarea { display:block; width:100%; background:transparent; border:0; border-bottom:1px solid var(--surface-raised); padding:7px 0; outline:0; color:var(--ink); font-size:13px; }
+.activity-editor select { appearance:none; background:transparent; cursor:pointer; border-radius:0; }
+.activity-editor textarea { resize:vertical; min-height:56px; max-height:140px; border:1px solid var(--surface-raised); border-radius:3px; padding:8px; margin-top:4px; font-size:12px; line-height:1.5; }
+.activity-editor-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 /* The original warm Roamwise palette is available as light mode. */
 html[data-theme="light"] { color-scheme:light; --ink:#20261f; --muted:#667064; --paper:#f8f7f2; --cream:#f0ede4; --line:#d8d7ce; --lime:#c5ec45; --lime-strong:#aeda20; --green:#2c4a36; --coral:#e7785a; --surface:#fbfaf5; --surface-raised:#d8d7ce; --subtle:#667064; }
 html[data-theme="light"] body { font-size:13px; }
@@ -117,6 +124,7 @@ html[data-theme="light"] .currency-symbol { color:#536156; } html[data-theme="li
 html[data-theme="light"] .briefing-option { color:#4d564c; } html[data-theme="light"] .briefing-option small { color:#737b71; }
 html[data-theme="light"] .access input { border-color:#a9ada4; } html[data-theme="light"] .access input::placeholder { color:#8c9188; } html[data-theme="light"] .access em { color:#979b90; }
 html[data-theme="light"] .account-menu-popover { background:#fbfaf5; box-shadow:5px 6px 0 #e2e1d7; } html[data-theme="light"] .account-menu-popover>button { color:#b92c20; }
+html[data-theme="light"] .activity-editor label { color:#555d53; } html[data-theme="light"] .activity-editor input,html[data-theme="light"] .activity-editor select,html[data-theme="light"] .activity-editor textarea { border-color:#a9ada4; color:var(--ink); }
 
 /* Native date controls otherwise keep a dark icon on the dark planner. */
 .field input[type=date]::-webkit-calendar-picker-indicator { filter:invert(1); cursor:pointer; }
@@ -137,3 +145,4 @@ html[data-theme="light"] .packing-group { background:#fbfaf5; } html[data-theme=
 
 @media (max-width:760px) { .packing-list-head{flex-direction:column;gap:9px}.packing-groups{grid-template-columns:1fr}.packing-add{grid-template-columns:1fr}.packing-add .secondary{justify-content:center} }
 @media (max-width:760px) { .account-page{padding:32px 0 55px}.account-page>h1,.account-panel h1{font-size:30px}.account-settings-grid{grid-template-columns:1fr}.account-panel{padding:18px}.reauth-row{grid-template-columns:1fr;align-items:start}.text-button{width:max-content;margin-top:5px} }
+@media (max-width:760px) { .activity-editor-row{grid-template-columns:1fr} }

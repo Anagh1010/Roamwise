@@ -1,0 +1,460 @@
+/* --------------------------------------------------
+   Itinerary Layout
+-------------------------------------------------- */
+
+.itinerary {
+  padding: 72px 0;
+}
+
+.itinerary-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.itinerary-head h2 {
+  margin-bottom: 8px;
+}
+
+.itinerary-head p:not(.eyebrow) {
+  color: var(--muted);
+  max-width: 620px;
+  line-height: 1.5;
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.cost {
+  text-align: right;
+  min-width: 150px;
+  border-left: 1px solid var(--line);
+  padding-left: 18px;
+}
+
+.cost span,
+.cost small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.cost b {
+  font-size: 22px;
+  letter-spacing: -1px;
+  display: block;
+  margin: 2px 0;
+  color: var(--ink);
+}
+
+.demo-note {
+  margin: 8px 0 20px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--surface-raised);
+  color: var(--ink);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* --------------------------------------------------
+   Day Tabs
+-------------------------------------------------- */
+
+.day-tabs {
+  display: flex;
+  overflow: auto;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab {
+  min-width: 100px;
+  background: none;
+  border: 0;
+  text-align: left;
+  padding: 10px 16px 12px 0;
+  margin-right: 20px;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+}
+
+.tab b,
+.tab span {
+  display: block;
+}
+
+.tab b {
+  font-size: 12px;
+}
+
+.tab span {
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.tab.active {
+  color: var(--green);
+  border-color: var(--green);
+}
+
+/* --------------------------------------------------
+   Schedule / Day Header
+-------------------------------------------------- */
+
+.schedule {
+  max-width: 850px;
+  padding-top: 22px;
+}
+
+.day-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.day-title > div {
+  margin-right: auto;
+}
+
+.day-title span {
+  color: var(--muted);
+  font-family: "DM Mono";
+  font-size: 10px;
+  letter-spacing: 0.6px;
+}
+
+.day-title h3 {
+  font-family: "Playfair Display";
+  font-size: 23px;
+  font-weight: 500;
+  margin: 4px 0 0;
+  color: var(--ink);
+}
+
+.icon-button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #414868;
+  border-radius: 50%;
+  color: #7dcfff;
+  background: #24283b;
+  display: grid;
+  place-items: center;
+  transition: all 0.15s ease;
+}
+
+.icon-button:hover {
+  background: #2f3549;
+  border-color: #7dcfff;
+}
+
+.icon-button svg {
+  width: 15px;
+}
+
+/* --------------------------------------------------
+   Timeline & Activities
+-------------------------------------------------- */
+
+.timeline {
+  border-top: 1px solid var(--line);
+}
+
+.activity {
+  display: grid;
+  grid-template-columns: 50px 38px 1fr 20px;
+  gap: 0;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.activity time {
+  font-family: "DM Mono";
+  font-size: 10px;
+  color: var(--muted);
+  padding-top: 4px;
+}
+
+.activity-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #1a1b26;
+  margin-right: 9px;
+  font-weight: 700;
+}
+
+.activity-icon.explore {
+  background: #73daca;
+}
+
+.activity-icon.food {
+  background: #ff9e64;
+}
+
+.activity-icon.move {
+  background: #7dcfff;
+}
+
+.activity-icon.stay {
+  background: #bb9af7;
+}
+
+.activity-body {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 8px;
+}
+
+.activity h4 {
+  font-size: 13px;
+  margin: 3px 0 2px;
+  color: var(--ink);
+}
+
+.place {
+  color: var(--muted);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0;
+}
+
+.activity-body > p {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 3px 0 0;
+}
+
+.activity-meta {
+  grid-column: 2;
+  display: flex;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.activity-meta span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.drag {
+  border: 0;
+  background: none;
+  color: var(--subtle);
+  padding: 2px;
+}
+
+.add-activity {
+  border: 1px dashed #7aa2f7;
+  color: #7aa2f7;
+  background: #24283b;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  transition: all 0.15s ease;
+}
+
+.add-activity:hover {
+  background: #2f3549;
+  border-color: #7dcfff;
+  color: #7dcfff;
+}
+
+/* --------------------------------------------------
+   Trip Footer
+-------------------------------------------------- */
+
+.trip-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 850px;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+  margin-top: 34px;
+}
+
+.trip-footer b,
+.trip-footer span {
+  display: block;
+}
+
+.trip-footer b {
+  font-family: "Playfair Display";
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.trip-footer span {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.save-message {
+  display: block;
+  color: #73daca;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.trip-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.map-link {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 11px;
+  color: #7aa2f7;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.map-link:hover {
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------
+   Trip Reviser
+-------------------------------------------------- */
+
+.trip-reviser {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 14px;
+  max-width: 850px;
+  margin: 0 0 24px;
+  padding: 16px;
+  border: 1px solid var(--surface-raised);
+  background: var(--surface);
+}
+
+.trip-reviser .eyebrow {
+  margin-bottom: 6px;
+}
+
+.trip-reviser label {
+  display: block;
+  color: #7dcfff;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.trip-reviser textarea {
+  display: block;
+  width: 100%;
+  min-height: 58px;
+  resize: vertical;
+  border: 1px solid var(--surface-raised);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 8px 10px;
+  outline-color: var(--green);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.trip-reviser .revision-message,
+.trip-reviser .revision-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 11px;
+}
+
+.revision-message {
+  color: #73daca;
+}
+
+.trip-reviser .primary {
+  align-self: center;
+}
+
+/* --------------------------------------------------
+   Activity Editor Modal
+-------------------------------------------------- */
+
+.activity-editor {
+  width: min(100%, 440px);
+}
+
+.activity-editor label {
+  display: block;
+  color: #7dcfff;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 12px 0 0;
+}
+
+.activity-editor input,
+.activity-editor select,
+.activity-editor textarea {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--surface-raised);
+  padding: 7px 0;
+  outline: 0;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.activity-editor select {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.activity-editor textarea {
+  resize: vertical;
+  min-height: 56px;
+  max-height: 140px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 3px;
+  padding: 8px;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.activity-editor-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Native date controls otherwise keep a dark icon on the dark planner. */
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+html[data-theme="light"] .field input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none;
+}

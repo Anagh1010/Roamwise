@@ -1,0 +1,144 @@
+/* --------------------------------------------------
+   Account Page Layout
+-------------------------------------------------- */
+
+.account-page {
+  padding: 44px 0 76px;
+}
+
+.account-page > h1,
+.account-panel h1 {
+  font-size: 38px;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.account-lede {
+  max-width: 540px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.account-settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 900px;
+}
+
+/* --------------------------------------------------
+   Account Panel
+-------------------------------------------------- */
+
+.account-panel {
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 6px 6px 0 #101014;
+}
+
+.account-panel-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  margin-bottom: 14px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--green);
+}
+
+.account-panel h2 {
+  font-size: 20px;
+  margin: 0 0 7px;
+  color: var(--ink);
+}
+
+.account-panel > p:not(.account-message) {
+  min-height: 38px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.account-panel label {
+  display: block;
+  margin: 13px 0 0;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.account-panel input {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--surface-raised);
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  padding: 8px 0;
+  font-size: 12px;
+}
+
+.account-panel input::placeholder {
+  color: var(--subtle);
+}
+
+.account-panel .primary {
+  margin-top: 20px;
+}
+
+.account-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: 18px;
+  margin: 11px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.account-message svg {
+  flex: none;
+  color: #73daca;
+  margin-top: 1px;
+}
+
+/* --------------------------------------------------
+   Reauth Row
+-------------------------------------------------- */
+
+.reauth-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.reauth-row label {
+  margin-top: 13px;
+}
+
+.reauth-row label span {
+  color: var(--subtle);
+  font-weight: 400;
+}
+
+.text-button {
+  border: 0;
+  border-bottom: 1px solid var(--green);
+  background: transparent;
+  color: var(--green);
+  padding: 0 0 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.text-button:disabled {
+  opacity: 0.6;
+}

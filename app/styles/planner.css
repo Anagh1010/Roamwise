@@ -1,0 +1,256 @@
+/* --------------------------------------------------
+   Planner Layout
+-------------------------------------------------- */
+
+.planner-wrap {
+  background: var(--cream);
+  border-top: 1px solid var(--line);
+  padding: 64px 0 70px;
+}
+
+.planner {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 52px;
+}
+
+.planner-intro h2,
+.itinerary h2,
+.how h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.08;
+  margin-bottom: 12px;
+}
+
+.planner-intro p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------
+   Trip Form Fields
+-------------------------------------------------- */
+
+.trip-form {
+  padding: 20px 0 0;
+}
+
+.field {
+  display: inline-block;
+  vertical-align: top;
+  width: 38%;
+  padding: 0 16px 15px 0;
+  position: relative;
+}
+
+.field.destination {
+  width: 32%;
+}
+
+.field.budget {
+  width: 30%;
+}
+
+.field > span,
+.label,
+.access > span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7dcfff;
+  margin-bottom: 6px;
+}
+
+.field > div {
+  border-bottom: 1px solid var(--surface-raised);
+  padding-bottom: 9px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+}
+
+.field input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  min-width: 0;
+}
+
+.field input[type="date"] {
+  font-size: 11px;
+}
+
+.field small {
+  position: absolute;
+  left: 22px;
+  bottom: 0;
+  font-size: 10px;
+  color: var(--subtle);
+}
+
+.date-dash {
+  color: var(--subtle);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 0.74fr;
+  gap: 28px;
+  margin: 22px 0 24px;
+}
+
+/* --------------------------------------------------
+   Currency Field
+-------------------------------------------------- */
+
+.currency-symbol {
+  font-size: 13px;
+  font-weight: 700;
+  color: #7dcfff;
+  min-width: 10px;
+}
+
+.currency-select {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #7dcfff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.currency-select option {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* --------------------------------------------------
+   Chips & Segmented Controls
+-------------------------------------------------- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip,
+.segmented button {
+  border: 1px solid #414868;
+  background: #24283b;
+  border-radius: 18px;
+  min-height: 28px;
+  padding: 4px 10px;
+  color: #c0caf5;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.chip:hover,
+.segmented button:hover {
+  background: #2f3549;
+  border-color: #7dcfff;
+  color: #7dcfff;
+}
+
+.chip.active {
+  color: #15161e;
+  background: #7dcfff;
+  border-color: #7dcfff;
+  font-weight: 700;
+}
+
+.segmented {
+  display: flex;
+}
+
+.segmented button {
+  border-radius: 0;
+  padding: 5px 12px;
+  border-right: 0;
+}
+
+.segmented button:first-child {
+  border-radius: 18px 0 0 18px;
+}
+
+.segmented button:last-child {
+  border-radius: 0 18px 18px 0;
+  border-right: 1px solid #414868;
+}
+
+.segmented .selected,
+.segmented button.selected {
+  background: #7aa2f7;
+  color: #15161e;
+  border-color: #7aa2f7;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------
+   Access Field
+-------------------------------------------------- */
+
+.access {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.access em {
+  color: var(--subtle);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.access input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--surface-raised);
+  padding: 0 0 9px;
+  outline: 0;
+  background: transparent;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.access input::placeholder {
+  color: var(--subtle);
+}
+
+/* --------------------------------------------------
+   Primary Button
+-------------------------------------------------- */
+
+.primary {
+  padding: 10px 18px;
+  background: #7dcfff;
+  border: 1px solid #7dcfff;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #15161e;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 3px 3px 0 #101014;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.primary:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1.5px 1.5px 0 #101014;
+  background: #9ece6a;
+  border-color: #9ece6a;
+}

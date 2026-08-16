@@ -1,0 +1,306 @@
+/* --------------------------------------------------
+   Trips Hero
+-------------------------------------------------- */
+
+.trips-hero {
+  background: var(--cream);
+  border-top: 1px solid var(--line);
+  padding: 60px 0 52px;
+}
+
+.trips-hero h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 44px;
+  font-weight: 500;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.trips-hero p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 420px;
+  margin: 0;
+}
+
+/* --------------------------------------------------
+   Trips Library States
+-------------------------------------------------- */
+
+.trips-library {
+  padding: 48px 0 72px;
+}
+
+.trips-status {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.trips-status p {
+  margin: 0;
+}
+
+.trips-error {
+  flex-direction: column;
+  color: var(--coral);
+}
+
+.account-prompt,
+.empty-trips {
+  max-width: 520px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 7px 7px 0 #101014;
+}
+
+.account-prompt h2,
+.empty-trips h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.08;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.account-prompt > p:not(.eyebrow),
+.empty-trips p {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.empty-trips {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.empty-trips > svg {
+  color: #73daca;
+  margin-bottom: 8px;
+}
+
+/* --------------------------------------------------
+   Library Auth Form
+-------------------------------------------------- */
+
+.library-auth {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.library-auth label {
+  display: block;
+  color: #7dcfff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.library-auth input {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--surface-raised);
+  padding: 7px 0;
+  outline: 0;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.library-auth .auth-message,
+.library-auth .auth-switch {
+  grid-column: 1 / -1;
+}
+
+.library-auth .auth-switch {
+  margin: 0;
+  text-align: left;
+}
+
+/* --------------------------------------------------
+   Trip Grid & Cards
+-------------------------------------------------- */
+
+.trip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.trip-card {
+  display: block;
+  min-height: 220px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.16s, box-shadow 0.16s, border-color 0.16s;
+  box-shadow: 5px 5px 0 #101014;
+}
+
+.trip-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--green);
+  box-shadow: 5px 6px 0 var(--surface);
+}
+
+.trip-card-top,
+.trip-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.trip-card-top > span,
+.trip-dates {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trip-card h2 {
+  font-family: "Playfair Display", serif;
+  letter-spacing: -0.6px;
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 500;
+  margin: 22px 0 12px;
+  color: var(--ink);
+}
+
+.trip-dates {
+  color: var(--subtle);
+  font-size: 11px;
+  margin: 0 0 20px;
+}
+
+.trip-card-bottom {
+  border-top: 1px solid var(--surface);
+  padding-top: 10px;
+}
+
+.trip-card-bottom span:last-child {
+  text-align: right;
+}
+
+.trip-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+.trip-tags span {
+  border-radius: 16px;
+  background: var(--surface);
+  color: #73daca;
+  padding: 3px 7px;
+  font-size: 9px;
+}
+
+.trip-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.delete-trip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 4px;
+  background: transparent;
+  color: #f7768e;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.delete-trip-btn:hover {
+  background: #3b242e;
+  color: #f7768e;
+  border-color: #f7768e;
+}
+
+.delete-trip-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------
+   Saved Trip Detail
+-------------------------------------------------- */
+
+.saved-itinerary {
+  padding-top: 40px;
+}
+
+.saved-trip-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.saved-trip-facts span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
+.detail-top-bar .back-link {
+  margin: 0;
+}
+
+.delete-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #f7768e44;
+  border-radius: 4px;
+  padding: 6px 10px;
+  background: #281a24;
+  color: #f7768e;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.delete-detail-btn:hover {
+  background: #3b242e;
+  border-color: #f7768e;
+}
+
+.delete-detail-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

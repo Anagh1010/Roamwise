@@ -1,0 +1,84 @@
+/* --------------------------------------------------
+   Reset & Base Elements
+-------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "0xProto Nerd Font", ui-monospace, monospace;
+  font-size: 13px;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------
+   Typography
+-------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -1.6px;
+}
+
+h1 {
+  font-size: clamp(40px, 4.8vw, 62px);
+  font-weight: 600;
+  line-height: 0.98;
+  margin-bottom: 20px;
+}
+
+h1 i {
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  color: var(--green);
+}
+
+/* --------------------------------------------------
+   Utilities
+-------------------------------------------------- */
+
+.error {
+  color: var(--coral);
+  font-size: 12px;
+  margin: 0 0 11px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

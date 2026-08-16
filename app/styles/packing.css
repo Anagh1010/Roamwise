@@ -1,0 +1,172 @@
+/* --------------------------------------------------
+   Smart Packing List
+-------------------------------------------------- */
+
+.packing-list {
+  max-width: 850px;
+  margin-top: 36px;
+  padding: 20px 0 5px;
+  border-top: 1px solid var(--line);
+}
+
+.packing-list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.packing-list-head .eyebrow {
+  margin-bottom: 6px;
+}
+
+.packing-list-head h3 {
+  font-size: 20px;
+  margin: 0 0 5px;
+  color: var(--ink);
+}
+
+.packing-list-head > div > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 0;
+}
+
+.packing-progress {
+  flex: none;
+  border: 1px solid var(--surface-raised);
+  background: var(--surface);
+  color: var(--green);
+  border-radius: 16px;
+  padding: 5px 8px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------
+   Packing Groups
+-------------------------------------------------- */
+
+.packing-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.packing-group {
+  padding: 13px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.packing-group h4 {
+  color: var(--green);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  margin: 0 0 9px;
+}
+
+.packing-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.packing-group li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 27px;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.packing-group li.packed > span {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.packing-group li > span {
+  flex: 1;
+}
+
+.packing-group em {
+  display: inline-block;
+  margin-left: 6px;
+  color: #15161e;
+  background: #9ece6a;
+  border-radius: 10px;
+  padding: 2px 5px;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.packing-check,
+.packing-delete {
+  display: grid;
+  place-items: center;
+  padding: 2px;
+  border: 0;
+  background: transparent;
+}
+
+.packing-check {
+  color: var(--green);
+}
+
+.packing-delete {
+  color: var(--subtle);
+  opacity: 0;
+}
+
+.packing-group li:hover .packing-delete,
+.packing-delete:focus-visible {
+  opacity: 1;
+}
+
+.packing-delete:hover {
+  color: #f7768e;
+}
+
+/* --------------------------------------------------
+   Add Item Form
+-------------------------------------------------- */
+
+.packing-add {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.packing-add select,
+.packing-add input {
+  min-width: 0;
+  border: 1px solid var(--surface-raised);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 7px 9px;
+  border-radius: 3px;
+  font-size: 11px;
+  outline-color: var(--green);
+}
+
+.packing-add select option {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.packing-add .secondary {
+  gap: 5px;
+}
+
+.packing-save-status {
+  min-height: 15px;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+}

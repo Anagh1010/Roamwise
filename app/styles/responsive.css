@@ -1,0 +1,245 @@
+/* --------------------------------------------------
+   Breakpoint: max-width 760px
+   Global layout, hero, planner, itinerary, footer
+-------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .shell {
+    width: min(100% - 32px, 600px);
+  }
+
+  .nav {
+    height: 62px;
+  }
+
+  .nav-links,
+  .sign-in {
+    display: none;
+  }
+
+  .menu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 32px 0 45px;
+    gap: 30px;
+  }
+
+  .hero-art {
+    height: 280px;
+    max-width: 450px;
+  }
+
+  .planner {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .planner-wrap {
+    padding: 48px 0;
+  }
+
+  .field,
+  .field.destination,
+  .field.budget {
+    width: 100%;
+    padding-right: 0;
+    margin: 0 0 14px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 6px;
+  }
+
+  .itinerary {
+    padding: 48px 0;
+  }
+
+  .itinerary-head {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .cost {
+    text-align: left;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 10px 0 0;
+    width: 100%;
+  }
+
+  .activity {
+    grid-template-columns: 42px 32px 1fr 15px;
+  }
+
+  .activity-body {
+    display: block;
+  }
+
+  .activity-body > p {
+    margin: 8px 0;
+  }
+
+  .activity-meta {
+    margin-top: 7px;
+  }
+
+  .trip-footer {
+    align-items: start;
+    gap: 14px;
+    flex-direction: column;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .how {
+    padding: 48px 0;
+  }
+
+  .how h2 {
+    font-size: 26px;
+  }
+
+  .footer > div {
+    gap: 12px;
+  }
+
+  .footer p {
+    text-align: right;
+  }
+
+  .postcard {
+    left: 38%;
+  }
+
+  .trips-hero {
+    padding: 42px 0;
+  }
+
+  .trips-hero h1 {
+    font-size: 36px;
+  }
+
+  .trips-library {
+    padding: 36px 0 54px;
+  }
+
+  .account-prompt,
+  .empty-trips {
+    padding: 22px 18px;
+  }
+
+  .library-auth {
+    grid-template-columns: 1fr;
+  }
+
+  .library-auth .primary {
+    justify-content: center;
+  }
+
+  .trip-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saved-itinerary {
+    padding-top: 30px;
+  }
+
+  .saved-trip-facts {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .trip-reviser {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .trip-reviser .primary {
+    justify-content: center;
+  }
+
+  .briefing-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .briefing-card--phrases {
+    grid-column: 1;
+  }
+}
+
+/* --------------------------------------------------
+   Breakpoint: max-width 760px
+   Packing list
+-------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .packing-list-head {
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .packing-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .packing-add {
+    grid-template-columns: 1fr;
+  }
+
+  .packing-add .secondary {
+    justify-content: center;
+  }
+}
+
+/* --------------------------------------------------
+   Breakpoint: max-width 760px
+   Account settings
+-------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .account-page {
+    padding: 32px 0 55px;
+  }
+
+  .account-page > h1,
+  .account-panel h1 {
+    font-size: 30px;
+  }
+
+  .account-settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-panel {
+    padding: 18px;
+  }
+
+  .reauth-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .text-button {
+    width: max-content;
+    margin-top: 5px;
+  }
+}
+
+/* --------------------------------------------------
+   Breakpoint: max-width 760px
+   Activity editor
+-------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .activity-editor-row {
+    grid-template-columns: 1fr;
+  }
+}

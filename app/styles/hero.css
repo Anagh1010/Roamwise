@@ -12,15 +12,15 @@
 }
 
 .lede {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--muted);
-  max-width: 400px;
-  margin-bottom: 22px;
+  max-width: 440px;
+  margin-bottom: 24px;
 }
 
 .text-link {
-  font-size: 13px;
+  font-size: 14.5px;
   border-bottom: 1.5px solid var(--ink);
   padding-bottom: 4px;
 }
@@ -34,9 +34,8 @@
   overflow: hidden;
   position: relative;
   border-radius: 140px 140px 16px 16px;
-  background: linear-gradient(145deg, #24283b 0%, #1a1b26 100%);
+  background: #24283b;
   isolation: isolate;
-  box-shadow: inset 0 -6px 40px #101014;
 }
 
 .sun {
@@ -150,12 +149,12 @@
 .postcard small {
   display: block;
   font-family: "DM Mono";
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .postcard b {
   font-family: "Playfair Display";
-  font-size: 26px;
+  font-size: 28px;
   display: block;
   line-height: 1.1;
 }
@@ -198,7 +197,7 @@
 }
 
 .how h2 {
-  font-size: 32px;
+  font-size: 38px;
   margin-bottom: 34px;
 }
 
@@ -211,20 +210,20 @@
 .steps b {
   color: #7dcfff;
   font-family: "DM Mono";
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .steps h3 {
   font-family: "Playfair Display";
   font-weight: 500;
-  font-size: 18px;
+  font-size: 22px;
   margin: 9px 0 6px;
   color: var(--ink);
 }
 
 .steps p {
   color: var(--muted);
-  max-width: 240px;
-  font-size: 13px;
+  max-width: 260px;
+  font-size: 14.5px;
   line-height: 1.55;
 }

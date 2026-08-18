@@ -10,7 +10,7 @@
 
 .trips-hero h1 {
   font-family: "Playfair Display", serif;
-  font-size: 44px;
+  font-size: 52px;
   font-weight: 500;
   margin: 0 0 10px;
   color: var(--ink);
@@ -18,9 +18,9 @@
 
 .trips-hero p:not(.eyebrow) {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 15.5px;
   line-height: 1.55;
-  max-width: 420px;
+  max-width: 440px;
   margin: 0;
 }
 
@@ -39,7 +39,7 @@
   justify-content: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .trips-status p {
@@ -63,7 +63,7 @@
 .account-prompt h2,
 .empty-trips h2 {
   font-family: "Playfair Display", serif;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 500;
   line-height: 1.08;
   margin: 0 0 10px;
@@ -74,7 +74,7 @@
 .empty-trips p {
   color: var(--muted);
   line-height: 1.55;
-  font-size: 13px;
+  font-size: 14px;
   margin-bottom: 18px;
 }
 
@@ -102,7 +102,7 @@
 .library-auth label {
   display: block;
   color: #7dcfff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -115,7 +115,7 @@
   padding: 7px 0;
   outline: 0;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .library-auth .auth-message,
@@ -163,7 +163,7 @@
   align-items: center;
   gap: 10px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .trip-card-top > span,
@@ -176,7 +176,7 @@
 .trip-card h2 {
   font-family: "Playfair Display", serif;
   letter-spacing: -0.6px;
-  font-size: 22px;
+  font-size: 25px;
   line-height: 1.1;
   font-weight: 500;
   margin: 22px 0 12px;
@@ -185,7 +185,7 @@
 
 .trip-dates {
   color: var(--subtle);
-  font-size: 11px;
+  font-size: 12px;
   margin: 0 0 20px;
 }
 
@@ -209,8 +209,8 @@
   border-radius: 16px;
   background: var(--surface);
   color: #73daca;
-  padding: 3px 7px;
-  font-size: 9px;
+  padding: 3px 8px;
+  font-size: 10.5px;
 }
 
 .trip-card-actions {
@@ -260,7 +260,7 @@
   padding-top: 16px;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .saved-trip-facts span {
@@ -289,7 +289,7 @@
   padding: 6px 10px;
   background: #281a24;
   color: #f7768e;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;

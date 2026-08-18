@@ -22,14 +22,14 @@
 }
 
 .packing-list-head h3 {
-  font-size: 20px;
+  font-size: 22px;
   margin: 0 0 5px;
   color: var(--ink);
 }
 
 .packing-list-head > div > p:not(.eyebrow) {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12.5px;
   margin-bottom: 0;
 }
 
@@ -39,8 +39,8 @@
   background: var(--surface);
   color: var(--green);
   border-radius: 16px;
-  padding: 5px 8px;
-  font-size: 10px;
+  padding: 5px 9px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -62,7 +62,7 @@
 
 .packing-group h4 {
   color: var(--green);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.3px;
   margin: 0 0 9px;
 }
@@ -79,7 +79,7 @@
   gap: 7px;
   min-height: 27px;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12.5px;
   line-height: 1.35;
 }
 
@@ -99,7 +99,7 @@
   background: #9ece6a;
   border-radius: 10px;
   padding: 2px 5px;
-  font-size: 8px;
+  font-size: 9px;
   font-style: normal;
   font-weight: 700;
   text-decoration: none;
@@ -151,7 +151,7 @@
   color: var(--ink);
   padding: 7px 9px;
   border-radius: 3px;
-  font-size: 11px;
+  font-size: 12.5px;
   outline-color: var(--green);
 }
 
@@ -168,5 +168,5 @@
   min-height: 15px;
   margin: 7px 0 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
 }

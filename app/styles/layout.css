@@ -22,7 +22,7 @@
 }
 
 .nav-links a {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   text-decoration: none;
 }
@@ -49,7 +49,7 @@
 
 .brand {
   color: var(--ink);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   text-decoration: none;
   letter-spacing: -0.7px;
@@ -59,8 +59,8 @@
 }
 
 .brand-mark {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
   color: var(--green);
@@ -91,7 +91,7 @@
 .eyebrow {
   font-family: "DM Mono", monospace;
   color: #7dcfff;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 1.25px;
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@
 }
 
 .small {
-  font-size: 11px;
+  font-size: 12px;
   padding: 8px 12px;
 }
 
@@ -113,7 +113,7 @@
   padding: 7px 11px;
   background: var(--surface);
   color: var(--green);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
 }
@@ -124,7 +124,7 @@
   gap: 5px;
   margin: 0 0 26px;
   color: #7aa2f7;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
 }
@@ -143,10 +143,10 @@
   gap: 6px;
   border: 1px solid var(--surface-raised);
   border-radius: 18px;
-  padding: 5px 9px;
+  padding: 5px 10px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -161,7 +161,7 @@
   z-index: 30;
   top: calc(100% + 9px);
   right: 0;
-  width: 225px;
+  width: 235px;
   padding: 7px;
   border: 1px solid var(--surface-raised);
   background: var(--paper);
@@ -185,13 +185,13 @@
 
 .account-menu-identity b {
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .account-menu-identity span {
   overflow: hidden;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -206,7 +206,7 @@
   border: 0;
   background: transparent;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-align: left;
   text-decoration: none;
@@ -251,7 +251,7 @@
 .footer p {
   font-family: "Playfair Display";
   font-style: italic;
-  font-size: 13px;
+  font-size: 14px;
   margin: 0;
   color: var(--muted);
 }

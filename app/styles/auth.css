@@ -23,7 +23,7 @@
 
 .auth-card h2 {
   font-family: "Playfair Display";
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 500;
   margin: 0 0 6px;
   color: var(--ink);
@@ -31,7 +31,7 @@
 
 .auth-copy {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   margin-bottom: 18px;
 }
@@ -39,7 +39,7 @@
 .auth-card label {
   display: block;
   color: #7dcfff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   margin: 12px 0 0;
 }
@@ -53,7 +53,7 @@
   padding: 7px 0;
   outline: 0;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .auth-close {
@@ -68,7 +68,7 @@
 
 .auth-message {
   color: var(--coral);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.45;
   margin: 12px 0 0;
 }
@@ -85,6 +85,6 @@
   display: block;
   margin: 14px auto 0;
   color: #7aa2f7;
-  font-size: 11px;
+  font-size: 12px;
   text-decoration: underline;
 }

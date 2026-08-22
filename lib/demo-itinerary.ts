@@ -15,6 +15,49 @@ export function createDemoItinerary(input: PlannerInput): Itinerary {
   const full = input.pace === "Fast";
   const formattedBudget = formatCurrency(input.budget, currency);
 
+  const sampleEntries: import("./types").JournalEntry[] = [
+    {
+      id: "demo-entry-1",
+      dayNumber: 1,
+      date: formatDate(start),
+      time: "14:30",
+      type: "memory",
+      title: `First impressions of ${input.destination}`,
+      content: `Checked into our hotel and stepped outside into the afternoon sun. The atmosphere here is incredible!`,
+      location: `${input.destination} City Centre`,
+      mood: "🤩 Excited",
+      createdAt: new Date(start).toISOString(),
+    },
+    {
+      id: "demo-entry-2",
+      dayNumber: 1,
+      date: formatDate(start),
+      time: "19:45",
+      type: "expense",
+      title: "Welcome dinner & drinks",
+      content: "Sampled regional specialties and local wine at a cozy bistro.",
+      expense: {
+        amount: Math.round(dailyBudget * 0.35),
+        category: "food",
+        description: "Welcome dinner for two",
+      },
+      location: "Neighbourhood Bistro",
+      createdAt: new Date(start).toISOString(),
+    },
+    {
+      id: "demo-entry-3",
+      dayNumber: 2,
+      date: formatDate(new Date(start.getTime() + 86400000)),
+      time: "10:15",
+      type: "note",
+      title: "Morning coffee & pastry stop",
+      content: "Found a tiny bakery recommended by locals. Best espresso of the trip so far.",
+      location: "Artisanal Bakery",
+      mood: "☕ Relaxed",
+      createdAt: new Date(start.getTime() + 86400000).toISOString(),
+    },
+  ];
+
   const itinerary: Itinerary = {
     title: `${days}-day ${input.destination} escape`,
     overview: `A ${input.pace.toLowerCase()} itinerary shaped around ${input.interests.join(", ") || "your curiosities"}, with room to wander and stay within your ${formattedBudget} budget.`,
@@ -126,6 +169,46 @@ export function createDemoItinerary(input: PlannerInput): Itinerary {
       };
     })
   };
+  itinerary.journalEntries = sampleEntries;
+  itinerary.diary = createDemoTravelDiary({ destination: input.destination, itinerary, entries: sampleEntries });
   if (input.includeBriefing === false) delete itinerary.briefing;
   return itinerary;
+}
+
+export function createDemoTravelDiary(input: {
+  destination: string;
+  startDate?: string;
+  endDate?: string;
+  currency?: string;
+  itinerary: Itinerary;
+  entries?: import("./types").JournalEntry[];
+}): import("./types").TravelDiary {
+  const currency = input.currency || input.itinerary.currency || "USD";
+  const entries = input.entries || input.itinerary.journalEntries || [];
+  const totalSpent = entries.reduce((sum, e) => sum + (e.expense?.amount || 0), 0);
+
+  const notesList = entries.filter((e) => e.type === "note" || e.type === "memory");
+  const notesExcerpt = notesList.length > 0
+    ? `Notable moments recorded along the way included ${notesList.map((n) => `"${n.title}" (${n.content || "a memorable snapshot"})`).slice(0, 3).join(", ")}.`
+    : `Explored hidden side streets, local bakeries, and unforgettable neighborhood vibes.`;
+
+  const highlights = notesList.length > 0
+    ? notesList.slice(0, 4).map((n) => n.title)
+    : [
+        `Arrival and first impressions of ${input.destination}`,
+        `Authentic local food and evening strolls`,
+        `Unhurried morning coffee and neighborhood architecture`,
+        `Serendipitous detour through historic backstreets`,
+      ];
+
+  return {
+    title: `Memoirs of ${input.destination}: An Unhurried Journey`,
+    summary: `A heartfelt record of wandering through ${input.destination}, savoring unforgettable meals, tracking discoveries, and embracing the beauty of unexpected moments.`,
+    prose: `Stepping into ${input.destination} brought an immediate change of pace. From the moment of arrival, the days unfolded with a rare balance of wonder and ease. ${notesExcerpt}\n\nEach day carried its own distinct atmosphere—from quiet morning walks where the city slowly stirred to life, to evening dinners surrounded by the warm hum of local conversation. The planned route provided the canvas, but the genuine magic lived in the unplanned detours: catching the golden light reflecting off historic facades, sitting at a sunlit terrace café, and embracing every small discovery.\n\nLooking back across the days, ${input.destination} offered far more than just a destination; it offered a reminder to wander deeply, pack lightly, and cherish the rhythm of being present in a new place.`,
+    highlights,
+    totalSpent: totalSpent > 0 ? totalSpent : undefined,
+    reflection: `Traveling through ${input.destination} wasn't about checking boxes—it was about savoring the spaces in between. The memories and notes collected here capture a journey that felt truly personal.`,
+    generatedAt: new Date().toISOString(),
+    source: "demo",
+  };
 }

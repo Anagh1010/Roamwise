@@ -350,6 +350,25 @@ html[data-theme="light"] .packing-delete:hover {
   color: #b92c20;
 }
 
+html[data-theme="light"] .journal-form-card,
+html[data-theme="light"] .expense-tracker,
+html[data-theme="light"] .timeline-entry-card {
+  background: #fbfaf5;
+}
+
+html[data-theme="light"] .diary-card {
+  background: linear-gradient(135deg, #fffdf5, #f4efe1);
+  border-color: #d8c998;
+  box-shadow: 5px 6px 0 #e2e1d7;
+}
+
+html[data-theme="light"] .diary-title { color: #344b2c; }
+html[data-theme="light"] .diary-summary,
+html[data-theme="light"] .diary-prose,
+html[data-theme="light"] .diary-reflection { color: #4e594a; }
+html[data-theme="light"] .diary-spend { color: #648323; }
+html[data-theme="light"] .highlight-chip { color: #344b2c; background: #e5f5ad; border-color: #c5db86; }
+
 /* --------------------------------------------------
    Footer
 -------------------------------------------------- */

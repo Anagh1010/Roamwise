@@ -8,6 +8,7 @@ import { getSupabaseClient, hasSupabaseAuth } from "@/lib/supabase";
 import { CURRENCIES, formatCurrency, getCurrencySymbol } from "@/lib/currency";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { PackingList } from "@/components/packing-list";
+import { TravelJournal } from "@/components/travel-journal";
 import { AccountMenu } from "@/components/account-menu";
 
 const interestOptions = ["Food & drink", "Art & culture", "Nature", "History", "Shopping", "Nightlife"];
@@ -156,6 +157,7 @@ export default function Home() {
       </div>
       <div className="trip-footer"><div><b>Pack lightly, wander deeply.</b><span>{itinerary.packingTips.join(" · ")}</span>{saveMessage && <small className="save-message">{saveMessage}</small>}</div><div className="trip-actions"><a className="map-link" href={mapUrl} target="_blank" rel="noreferrer"><MapPin size={16}/> Open map</a><button onClick={saveTrip} disabled={saving} className="primary small"><Star size={16}/>{saving ? "Saving…" : "Save this trip"}</button></div></div>
       <PackingList items={itinerary.packingList || []} onChange={(packingList) => setItinerary((current) => current ? { ...current, packingList } : current)} />
+      <TravelJournal destination={form.destination} startDate={form.startDate} endDate={form.endDate} budget={form.budget} currency={activeCurrency} initialEntries={itinerary.journalEntries || []} initialDiary={itinerary.diary} onEntriesChange={(journalEntries) => setItinerary((current) => current ? { ...current, journalEntries } : current)} onDiaryChange={(diary) => setItinerary((current) => current ? { ...current, diary } : current)} />
       {itinerary.briefing && <div className="briefing">
         <button className="briefing-toggle" onClick={() => setBriefingOpen((o) => !o)} aria-expanded={briefingOpen}>
           <span><BookOpen size={16}/> Travel Briefing</span>

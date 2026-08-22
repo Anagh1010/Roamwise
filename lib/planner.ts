@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { createDemoItinerary } from "./demo-itinerary";
-import { packingCategories, type Itinerary, type PlannerInput } from "./types";
+import { createDemoItinerary, createDemoTravelDiary } from "./demo-itinerary";
+import { expenseCategories, packingCategories, type Itinerary, type PlannerInput } from "./types";
 
 // ── Zod schemas ───────────────────────────────────────────────────────────────
 
@@ -51,6 +51,40 @@ export const itinerarySchema = z.object({
 });
 
 export const packingListSchema = itinerarySchema.shape.packingList;
+
+export const journalEntrySchema = z.object({
+  id: z.string().min(1).max(120),
+  dayNumber: z.number().int().positive().optional(),
+  date: z.string().min(1).max(40),
+  time: z.string().max(40).optional(),
+  type: z.enum(["note", "expense", "memory"]),
+  title: z.string().min(1).max(200),
+  content: z.string().max(5000),
+  expense: z.object({
+    amount: z.number().finite().positive(),
+    category: z.enum(expenseCategories),
+    description: z.string().min(1).max(500),
+  }).optional(),
+  location: z.string().max(300).optional(),
+  mood: z.string().max(100).optional(),
+  imageUrl: z.string().url().max(2048).optional(),
+  createdAt: z.string().datetime(),
+}).superRefine((entry, ctx) => {
+  if (entry.type === "expense" && !entry.expense) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Expenses require an amount and category.", path: ["expense"] });
+  }
+});
+
+export const travelDiarySchema = z.object({
+  title: z.string(),
+  summary: z.string(),
+  prose: z.string(),
+  highlights: z.array(z.string()),
+  totalSpent: z.number().optional(),
+  reflection: z.string(),
+  generatedAt: z.string().optional(),
+  source: z.enum(["ai", "demo"]).optional(),
+});
 
 // ── Gemini API response schemas (enforces complete, valid JSON at API level) ──
 
@@ -140,6 +174,19 @@ const revisionResponseSchema = {
     itinerary: itineraryResponseSchema,
   },
   required: ["summary", "changedDayNumbers", "itinerary"],
+};
+
+const diaryResponseSchema = {
+  type: "OBJECT",
+  properties: {
+    title: { type: "STRING" },
+    summary: { type: "STRING" },
+    prose: { type: "STRING" },
+    highlights: { type: "ARRAY", items: { type: "STRING" } },
+    totalSpent: { type: "NUMBER" },
+    reflection: { type: "STRING" },
+  },
+  required: ["title", "summary", "prose", "highlights", "reflection"],
 };
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -249,6 +296,57 @@ export async function reviseItinerary(input: RevisionInput): Promise<{ itinerary
   } catch (error) {
     console.error("AI itinerary revision failed", error);
     throw error instanceof Error ? error : new Error("Could not revise this itinerary.");
+  }
+}
+
+// ── Travel Diary Generation ────────────────────────────────────────────────────
+
+export async function generateTravelDiary(input: {
+  destination: string;
+  currency?: string;
+  totalBudget?: number;
+  itinerary: Itinerary;
+  entries?: import("./types").JournalEntry[];
+}): Promise<import("./types").TravelDiary> {
+  const currency = input.currency || input.itinerary.currency || "USD";
+  const entries = input.entries || input.itinerary.journalEntries || [];
+
+  if (!process.env.GEMINI_API_KEY) {
+    return createDemoTravelDiary({
+      destination: input.destination,
+      currency,
+      itinerary: input.itinerary,
+      entries,
+    });
+  }
+
+  try {
+    const system = `You are a warm, evocative travel writer and memoirist. Return only valid JSON. Synthesize a traveler's itinerary schedule, logged notes, expenses, photos, and recorded memories into a beautiful, personal AI Travel Diary & Narrative Story. Capture atmospheric nuances, food, sights, emotions, and key takeaways. Include: title, summary (1-2 sentences), prose (3-4 vivid paragraphs), highlights (3-6 takeaway bullet strings), totalSpent (numeric total of logged expenses if present), and reflection (a poignant closing thought).`;
+
+    const prompt = `Destination: ${input.destination}\nCurrency: ${currency}\nBudget: ${input.totalBudget ?? input.itinerary.totalEstimatedCost}\nItinerary Schedule: ${JSON.stringify(input.itinerary.days)}\nLogged Journal Notes & Memories: ${JSON.stringify(entries)}`;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${geminiModel()}:generateContent`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: system }] },
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: "application/json", responseSchema: diaryResponseSchema, maxOutputTokens: 4096 }
+      })
+    });
+
+    if (!response.ok) throw new Error(`AI provider request failed: ${response.status}`);
+    const parsed = travelDiarySchema.safeParse(JSON.parse(getGeminiJson(await response.json())));
+    if (!parsed.success) throw new Error("The AI response did not contain a valid travel diary.");
+    return { ...parsed.data, generatedAt: new Date().toISOString(), source: "ai" };
+  } catch (error) {
+    console.error("AI travel diary generation failed", error);
+    return createDemoTravelDiary({
+      destination: input.destination,
+      currency,
+      itinerary: input.itinerary,
+      entries,
+    });
   }
 }
 

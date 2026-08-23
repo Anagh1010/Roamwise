@@ -5,15 +5,16 @@ import { generateTravelDiary } from "@/lib/planner";
 import { getAuthenticatedUser } from "@/lib/supabase";
 import type { Itinerary } from "@/lib/types";
 
-type RouteContext = { params: { id: string } };
+type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to generate a travel diary." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
 
   try {
-    const trip = await prisma.trip.findFirst({ where: { id: params.id, userId: user.id } });
+    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
     if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
 
     const itinerary = trip.itinerary as unknown as Itinerary;

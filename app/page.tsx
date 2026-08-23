@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { ArrowUpRight, BookOpen, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, DollarSign, Footprints, Globe, GripVertical, Heart, Languages, LoaderCircle, MapPin, Menu, Plus, ShieldCheck, Sparkles, Star, Utensils } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import type { Activity, Itinerary, PlannerInput } from "@/lib/types";
@@ -129,7 +130,7 @@ export default function Home() {
   const activeCurrency = itinerary?.currency || form.currency || "USD";
 
   return <main>
-    <nav className="nav shell"><a className="brand" href="#top"><span className="brand-mark"><Compass size={19}/></span>roamwise</a><div className="nav-links"><a href="#planner">Plan a trip</a><a href="#how">How it works</a><a href="/trips">My trips</a></div><button className="menu" aria-label="Open menu"><Menu size={21}/></button><div className="nav-actions"><ThemeToggle/>{user ? <AccountMenu email={user.email} onSignOut={signOut}/> : <button onClick={() => { setAuthMode("signIn"); setAuthOpen(true); setAuthMessage(""); }} className="sign-in">Sign in <ArrowUpRight size={15}/></button>}</div></nav>
+    <nav className="nav shell"><a className="brand" href="#top"><span className="brand-mark"><Compass size={19}/></span>roamwise</a><div className="nav-links"><a href="#planner">Plan a trip</a><a href="#how">How it works</a><Link href="/trips">My trips</Link></div><button className="menu" aria-label="Open menu"><Menu size={21}/></button><div className="nav-actions"><ThemeToggle/>{user ? <AccountMenu email={user.email} onSignOut={signOut}/> : <button onClick={() => { setAuthMode("signIn"); setAuthOpen(true); setAuthMessage(""); }} className="sign-in">Sign in <ArrowUpRight size={15}/></button>}</div></nav>
 
     <section id="top" className="hero shell">
       <div className="hero-copy"><p className="eyebrow"><Sparkles size={14}/> PERSONAL TRAVEL DESIGNER</p><h1>Trips that feel<br/><i>like you.</i></h1><p className="lede">Tell us what matters. We’ll shape the days, find the rhythm, and leave room for your best detours.</p><a href="#planner" className="text-link">Start planning <ArrowUpRight size={18}/></a></div>

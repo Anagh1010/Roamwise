@@ -4,10 +4,11 @@ import { itinerarySchema, reviseItinerary } from "@/lib/planner";
 import { prisma } from "@/lib/prisma";
 import { getAuthenticatedUser } from "@/lib/supabase";
 
-type RouteContext = { params: { id: string } };
+type RouteContext = { params: Promise<{ id: string }> };
 const requestSchema = z.object({ request: z.string().trim().min(4).max(600) });
 
 export async function POST(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to revise saved trips." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Add DATABASE_URL to revise saved trips." }, { status: 503 });
@@ -16,7 +17,7 @@ export async function POST(request: Request, { params }: RouteContext) {
   if (!body.success) return NextResponse.json({ error: "Describe the change you would like to make." }, { status: 400 });
 
   try {
-    const trip = await prisma.trip.findFirst({ where: { id: params.id, userId: user.id } });
+    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
     if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
     const itinerary = itinerarySchema.safeParse(trip.itinerary);
     if (!itinerary.success) return NextResponse.json({ error: "This saved itinerary is incomplete and cannot be revised." }, { status: 422 });

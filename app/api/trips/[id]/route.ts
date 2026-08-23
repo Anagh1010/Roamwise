@@ -4,15 +4,16 @@ import { prisma } from "@/lib/prisma";
 import { getAuthenticatedUser } from "@/lib/supabase";
 import { journalEntrySchema, packingListSchema, travelDiarySchema } from "@/lib/planner";
 
-type RouteContext = { params: { id: string } };
+type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to view saved trips." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Add DATABASE_URL to view saved trips." }, { status: 503 });
 
   try {
-    const trip = await prisma.trip.findFirst({ where: { id: params.id, userId: user.id } });
+    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
     if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
     return NextResponse.json({ trip });
   } catch (error) {
@@ -22,13 +23,14 @@ export async function GET(request: Request, { params }: RouteContext) {
 }
 
 export async function DELETE(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to delete trips." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
 
   try {
     const deleted = await prisma.trip.deleteMany({
-      where: { id: params.id, userId: user.id }
+      where: { id, userId: user.id }
     });
     if (deleted.count === 0) return NextResponse.json({ error: "Trip not found or unauthorized." }, { status: 404 });
     return NextResponse.json({ success: true });
@@ -45,6 +47,7 @@ const tripUpdateSchema = z.object({
 });
 
 export async function PATCH(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to update a trip." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
@@ -52,7 +55,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   if (!body.success) return NextResponse.json({ error: "Invalid trip update parameters." }, { status: 400 });
 
   try {
-    const trip = await prisma.trip.findFirst({ where: { id: params.id, userId: user.id } });
+    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
     if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
     const itinerary = (trip.itinerary as Record<string, unknown>) || {};
     const updatedItinerary = {

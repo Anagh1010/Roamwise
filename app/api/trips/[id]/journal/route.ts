@@ -5,9 +5,10 @@ import type { JournalEntry } from "@/lib/types";
 import { journalEntrySchema } from "@/lib/planner";
 import { z } from "zod";
 
-type RouteContext = { params: { id: string } };
+type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to add journal entries." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
@@ -16,7 +17,7 @@ export async function POST(request: Request, { params }: RouteContext) {
     const body = await request.json().catch(() => null);
     if (!body || !body.title) return NextResponse.json({ error: "A journal entry title is required." }, { status: 400 });
 
-    const trip = await prisma.trip.findFirst({ where: { id: params.id, userId: user.id } });
+    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
     if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
 
     const itinerary = (trip.itinerary as Record<string, unknown>) || {};
@@ -71,6 +72,7 @@ const journalEntryUpdateSchema = z.object({
 });
 
 export async function PATCH(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to update journal entries." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
@@ -79,7 +81,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   if (!body.success) return NextResponse.json({ error: "Invalid journal entry update." }, { status: 400 });
 
   try {
-    const trip = await prisma.trip.findFirst({ where: { id: params.id, userId: user.id } });
+    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
     if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
     const itinerary = (trip.itinerary as Record<string, unknown>) || {};
     const entries = (itinerary.journalEntries as JournalEntry[]) || [];
@@ -98,6 +100,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
 }
 
 export async function DELETE(request: Request, { params }: RouteContext) {
+  const { id } = await params;
   const user = await getAuthenticatedUser(request);
   if (!user) return NextResponse.json({ error: "Sign in to delete journal entries." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
@@ -109,7 +112,7 @@ export async function DELETE(request: Request, { params }: RouteContext) {
 
     if (!entryId) return NextResponse.json({ error: "entryId is required." }, { status: 400 });
 
-    const trip = await prisma.trip.findFirst({ where: { id: params.id, userId: user.id } });
+    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
     if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
 
     const itinerary = (trip.itinerary as Record<string, unknown>) || {};

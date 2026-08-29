@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getAuthenticatedUser } from "@/lib/supabase";
-import { itinerarySchema } from "@/lib/planner";
+import { persistedItinerarySchema } from "@/lib/schemas/itinerary";
 
-const tripSchema = z.object({ destination: z.string().min(2), startDate: z.string().date(), endDate: z.string().date(), budget: z.number().int(), pace: z.string(), interests: z.array(z.string()), accessibility: z.string().optional(), itinerary: itinerarySchema });
+const tripSchema = z.object({ destination: z.string().min(2), startDate: z.string().date(), endDate: z.string().date(), budget: z.number().int(), pace: z.string(), interests: z.array(z.string()), accessibility: z.string().optional(), itinerary: persistedItinerarySchema });
 
 export async function POST(request: Request) {
   const user = await getAuthenticatedUser(request);

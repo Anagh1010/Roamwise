@@ -1,39 +1,21 @@
 import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { concurrentTripUpdateResponse, getOwnedTrip, invalidPersistedItineraryResponse, parsePersistedItinerary, updateItineraryIfCurrent } from "@/lib/api/trips";
 import { generateTravelDiary } from "@/lib/planner";
-import { getAuthenticatedUser } from "@/lib/supabase";
-import type { Itinerary } from "@/lib/types";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: RouteContext) {
   const { id } = await params;
-  const user = await getAuthenticatedUser(request);
-  if (!user) return NextResponse.json({ error: "Sign in to generate a travel diary." }, { status: 401 });
-  if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
-
+  const result = await getOwnedTrip(request, id, "generate a travel diary");
+  if ("error" in result) return result.error;
+  const itinerary = parsePersistedItinerary(result.trip);
+  if (!itinerary.success) return invalidPersistedItineraryResponse();
   try {
-    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
-    if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
-
-    const itinerary = trip.itinerary as unknown as Itinerary;
-    const diary = await generateTravelDiary({
-      destination: trip.destination,
-      totalBudget: trip.budget,
-      currency: itinerary.currency || "USD",
-      itinerary,
-      entries: itinerary.journalEntries || [],
-    });
-
-    const updatedTrip = await prisma.trip.update({
-      where: { id: trip.id },
-      data: { itinerary: { ...itinerary, diary } as Prisma.InputJsonValue }
-    });
-
-    return NextResponse.json({ diary, trip: updatedTrip });
+    const diary = await generateTravelDiary({ destination: result.trip.destination, totalBudget: result.trip.budget, currency: itinerary.data.currency, itinerary: itinerary.data, entries: itinerary.data.journalEntries });
+    if (!await updateItineraryIfCurrent(result.trip, { ...itinerary.data, diary })) return concurrentTripUpdateResponse();
+    return NextResponse.json({ diary });
   } catch (error) {
-    console.error("AI Travel Diary generation failed", error);
-    return NextResponse.json({ error: "Could not generate your travel diary." }, { status: 500 });
+    console.error("AI travel diary generation failed", error);
+    return NextResponse.json({ error: "Could not generate your travel diary." }, { status: 502 });
   }
 }

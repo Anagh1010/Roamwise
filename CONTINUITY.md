@@ -1,33 +1,36 @@
 # Continuity Ledger
 
 ## Snapshot
-- 2026-08-22 [USER] Goal: finish and document Roamwise, an AI travel planner.
-- 2026-08-22 [CODE] Current state: Travel Journal, expense tracking, and AI diary are implemented; README documents setup and features.
-- 2026-08-22 [USER] Goal: remediation completed for the npm audit findings.
-- 2026-08-22 [ASSUMPTION] Production domain is UNCONFIRMED.
+- 2026-08-24 [USER] Goal: finish and document Roamwise, an AI travel planner.
+- 2026-08-24 [TOOL] Current state: feature-complete codebase audited for security, correctness, and redundancy.
+- 2026-08-24 [USER] Production domain is UNCONFIRMED.
 
 ## Decisions
+- 2026-08-29 [CODE] D004 ACTIVE: Persisted itinerary JSON is versioned and validated before every implemented mutation.
 - 2026-08-22 [CODE] D001 ACTIVE: Journal entries and diaries reside in the existing `Trip.itinerary` JSON; no database migration is required.
+- 2026-08-24 [CODE] D002 ACTIVE: Persisted itinerary JSON must be validated before trust; current unvalidated paths are remediation priorities.
+- 2026-08-24 [USER] D003 ACTIVE: Keep detailed audit findings in standalone `AUDIT.md`; keep only bounded references in this ledger.
 
 ## Done (recent)
-- 2026-08-22 [CODE] Added authenticated journal CRUD, diary-generation endpoint, UI, responsive/light-theme styling, and Zod validation.
-- 2026-08-22 [TOOL] `npx tsc --noEmit` and `npm run build` passed after the journal work.
-- 2026-08-22 [CODE] Expanded README with stack, features, environment variables, local setup, and validation instructions.
-- 2026-08-22 [TOOL] `npm audit` reported 5 high-severity package findings: direct `next@14.2.35`, direct `eslint-config-next@14.2.35`, and transitive `postcss@8.4.31` and `glob@10.3.10`.
-- 2026-08-22 [CODE] Upgraded to `next@16.3.2`, `eslint-config-next@16.3.2`, and ESLint 9; migrated dynamic route params, typed-routes config, and lint configuration.
-- 2026-08-22 [TOOL] `npm run lint`, `npx tsc --noEmit`, and `npm run build` passed after the upgrade; lint emits 8 non-blocking warnings.
+- 2026-08-29 [CODE] Added canonical persisted-itinerary validation, server-authoritative journal IDs, and optimistic conflict responses for journal, diary, and revision writes.
+- 2026-08-22 [CODE] Added authenticated journal CRUD, diary generation, UI, styling, and Zod validation.
+- 2026-08-22 [CODE] Upgraded to Next.js 16 and ESLint 9; migrated dynamic params, typed routes, and lint config.
+- 2026-08-24 [TOOL] Deep audit found journal persistence validation gaps, public AI/place endpoints, stale docs/config, oversized files, and duplicated request/auth logic.
+- 2026-08-24 [TOOL] Full findings recorded in `AUDIT.md`; remediation order starts with unified persisted-itinerary validation and regression tests.
+- 2026-08-24 [TOOL] `npm run lint` passes with 8 warnings; `npx tsc --noEmit` passes.
+- 2026-08-24 [TOOL] `next build` currently fails because Turbopack worker port binding is blocked in this environment (`Operation not permitted`), even outside sandbox.
 
 ## Working set
-- 2026-08-22 [CODE] `README.md`
-- 2026-08-22 [CODE] `app/account/page.tsx`
-- 2026-08-22 [CODE] `lib/supabase.ts`
-- 2026-08-22 [CODE] `.env.example`
-- 2026-08-22 [CODE] `package.json`
-- 2026-08-22 [CODE] `package-lock.json`
-- 2026-08-22 [CODE] `eslint.config.mjs`
+- 2026-08-24 [CODE] `app/api/trips/[id]/journal/route.ts`
+- 2026-08-24 [CODE] `app/api/trips/[id]/journal/diary/route.ts`
+- 2026-08-24 [CODE] `lib/planner.ts`
+- 2026-08-24 [CODE] `lib/supabase.ts`
+- 2026-08-24 [CODE] `components/travel-journal.tsx`
+- 2026-08-24 [CODE] `README.md`, `.env.example`, `.env.example.original`
 
 ## Receipts
-- 2026-08-22 [TOOL] Supabase Redirect URLs documentation: set Site URL and allow-list the URLs used in `redirectTo`; exact production paths are recommended.
-- 2026-08-22 [TOOL] Workspace had no `CONTINUITY.md` before this ledger was created.
-- 2026-08-22 [TOOL] Audit remediation offered by npm is a semver-major upgrade to `next@16.3.2` and `eslint-config-next@16.3.2`; no package changes were made.
-- 2026-08-22 [TOOL] Final `npm audit --omit=dev` reported 0 vulnerabilities.
+- 2026-08-29 [TOOL] `npx tsc --noEmit` passes after persistence hardening; lint previously passed with 8 warnings.
+- 2026-08-24 [TOOL] Zod default strips unknown keys; `itinerarySchema.safeParse(trip.itinerary)` therefore drops unvalidated extras such as `journalEntries`.
+- 2026-08-24 [TOOL] Journal POST/PATCH/DELETE spread raw DB JSON into updates without validating existing entries or full itinerary.
+- 2026-08-24 [TOOL] `/api/itinerary` and `/api/places` have no auth or explicit rate limiting.
+- 2026-08-24 [TOOL] Local npm registry access was unavailable, so live `npm audit` was UNCONFIRMED.

@@ -81,11 +81,12 @@ export type TravelDiary = {
   highlights: string[];
   totalSpent?: number;
   reflection: string;
-  generatedAt: string;
+  generatedAt?: string;
   source?: "ai" | "demo";
 };
 
 export type Itinerary = {
+  schemaVersion?: 1;
   title: string;
   overview: string;
   currency?: string;

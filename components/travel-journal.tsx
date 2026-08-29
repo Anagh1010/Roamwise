@@ -109,19 +109,21 @@ export function TravelJournal({
     };
 
     try {
+      let savedEntry = newEntry;
       if (tripId) {
         const { data: { session } } = await getSupabaseClient().auth.getSession();
         if (!session) throw new Error("Your session has expired. Please sign in again.");
         const res = await fetch(`/api/trips/${tripId}/journal`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
-          body: JSON.stringify(newEntry),
+          body: JSON.stringify({ ...newEntry, id: undefined, createdAt: undefined }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Could not save entry.");
+        savedEntry = data.entry as JournalEntry;
       }
 
-      const updated = [newEntry, ...entries];
+      const updated = [savedEntry, ...entries];
       setEntries(updated);
       onEntriesChange?.(updated);
 

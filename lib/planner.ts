@@ -1,90 +1,9 @@
 import { z } from "zod";
 import { createDemoItinerary, createDemoTravelDiary } from "./demo-itinerary";
-import { expenseCategories, packingCategories, type Itinerary, type PlannerInput } from "./types";
+import { packingCategories, type Itinerary, type PlannerInput } from "./types";
+import { briefingSchema, itinerarySchema, travelDiarySchema } from "./schemas/itinerary";
 
-// ── Zod schemas ───────────────────────────────────────────────────────────────
-
-const usefulPhraseSchema = z.object({
-  phrase: z.string(),
-  translation: z.string(),
-  pronunciation: z.string().optional(),
-});
-
-const briefingSchema = z.object({
-  language: z.string().min(1).max(80).optional(),
-  locale: z.string().min(2).max(20).optional(),
-  generatedAt: z.string().datetime().optional(),
-  source: z.enum(["ai", "demo"]).optional(),
-  culturalEtiquette: z.array(z.string()).min(2).max(8),
-  localCustoms: z.array(z.string()).min(2).max(8),
-  usefulPhrases: z.array(usefulPhraseSchema).min(4).max(12),
-  safetyAdvice: z.array(z.string()).min(2).max(8),
-});
-
-export const itinerarySchema = z.object({
-  title: z.string(),
-  overview: z.string(),
-  currency: z.string().optional().default("USD"),
-  totalEstimatedCost: z.number().finite(),
-  packingTips: z.array(z.string()),
-  packingList: z.array(z.object({
-    category: z.enum(packingCategories),
-    item: z.string().min(1).max(120),
-    essential: z.boolean(),
-    checked: z.boolean().optional().default(false),
-  })).max(48).default([]),
-  briefing: briefingSchema.optional(),
-  days: z.array(z.object({
-    day: z.number().int().positive(),
-    date: z.string(),
-    theme: z.string(),
-    activities: z.array(z.object({
-      time: z.string(),
-      title: z.string(),
-      place: z.string(),
-      description: z.string(),
-      kind: z.enum(["stay", "food", "explore", "move"]),
-      cost: z.number().finite(),
-      duration: z.string()
-    }))
-  }))
-});
-
-export const packingListSchema = itinerarySchema.shape.packingList;
-
-export const journalEntrySchema = z.object({
-  id: z.string().min(1).max(120),
-  dayNumber: z.number().int().positive().optional(),
-  date: z.string().min(1).max(40),
-  time: z.string().max(40).optional(),
-  type: z.enum(["note", "expense", "memory"]),
-  title: z.string().min(1).max(200),
-  content: z.string().max(5000),
-  expense: z.object({
-    amount: z.number().finite().positive(),
-    category: z.enum(expenseCategories),
-    description: z.string().min(1).max(500),
-  }).optional(),
-  location: z.string().max(300).optional(),
-  mood: z.string().max(100).optional(),
-  imageUrl: z.string().url().max(2048).optional(),
-  createdAt: z.string().datetime(),
-}).superRefine((entry, ctx) => {
-  if (entry.type === "expense" && !entry.expense) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Expenses require an amount and category.", path: ["expense"] });
-  }
-});
-
-export const travelDiarySchema = z.object({
-  title: z.string(),
-  summary: z.string(),
-  prose: z.string(),
-  highlights: z.array(z.string()),
-  totalSpent: z.number().optional(),
-  reflection: z.string(),
-  generatedAt: z.string().optional(),
-  source: z.enum(["ai", "demo"]).optional(),
-});
+export { itinerarySchema, journalEntrySchema, packingListSchema, persistedItinerarySchema, travelDiarySchema } from "./schemas/itinerary";
 
 // ── Gemini API response schemas (enforces complete, valid JSON at API level) ──
 
@@ -291,6 +210,9 @@ export async function reviseItinerary(input: RevisionInput): Promise<{ itinerary
       currency,
       briefing: parsed.data.itinerary.briefing ?? existingBriefing,
       packingList: existingPackingList,
+      journalEntries: input.itinerary.journalEntries,
+      diary: input.itinerary.diary,
+      schemaVersion: input.itinerary.schemaVersion,
     };
     return { ...parsed.data, itinerary: finalItinerary };
   } catch (error) {

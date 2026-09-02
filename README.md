@@ -1,36 +1,35 @@
 # Roamwise — AI Travel Planner
 
-Roamwise is a full-stack travel-planning app that turns a destination, dates, budget, pace, interests, and accessibility needs into a personalized, editable day-by-day itinerary. Travelers can save plans, refine them with AI, prepare with a destination briefing and packing list, then capture the trip in a live journal and AI-generated travel diary.
+Roamwise is a full-stack travel-planning application that turns destinations, dates, budgets, pacing, interests, and accessibility needs into personalized, editable day-by-day itineraries. Travelers can save plans, refine them with AI, prepare with destination briefings and packing checklists, and capture their journeys in a live travel journal and AI-generated memoir diary.
 
 ## Features
 
-- Generate personalized itineraries with activities, timings, estimated costs, packing tips, and a currency-aware budget.
-- Use Gemini structured JSON output with Zod validation, plus a deterministic demo fallback when no API key is configured.
-- Refine saved itineraries with natural-language requests while preserving existing trip context.
-- Create AI travel briefings with etiquette, local customs, useful phrases, and safety guidance; ask follow-up briefing questions.
-- Save authenticated trips with Supabase Auth, PostgreSQL, Prisma ORM, and owner-scoped API routes.
-- Maintain an editable packing checklist that persists to the saved itinerary.
-- Record notes, memories, optional photo URLs, and categorized expenses in a Travel Journal.
-- Track live spending against the trip budget with category totals and day-filtered timeline entries.
-- Generate and persist an AI Travel Diary from the itinerary, journal entries, memories, and recorded expenses.
-- Resolve destination coordinates with OpenStreetMap Nominatim and provide a map link.
-- Switch between dark and light themes with responsive layouts for mobile screens.
+- **Personalized AI Itineraries**: Generates comprehensive day-by-day schedules with activity timings, estimated costs, packing tips, and currency-aware budgets.
+- **Deterministic Demo Fallback**: Works seamlessly out of the box without requiring an API key.
+- **Natural-Language AI Revisions**: Refine existing saved plans via conversational requests while preserving existing journal entries, packing items, and trip context.
+- **Travel Briefings & Interactive Q&A**: Destination-specific etiquette, local customs, safety advice, and useful phrases, with follow-up Q&A.
+- **Travel Journal & Expense Tracker**: Log notes, photo memories, and categorized expenses with live spending summaries against budget limits.
+- **AI Travel Memoir & Diary**: Synthesize itineraries, logged notes, expenses, and photos into a narrative memoir and highlights reel.
+- **Robust Persistence & Concurrency**: Enforces canonical Zod schema versioning, server-authoritative UUIDs, and optimistic concurrency locking (`updatedAt` matching) to prevent data corruption or overwrite races.
+- **Built-in Abuse Controls**: In-memory sliding-window rate limiting for AI endpoints (`/api/itinerary`) and 24-hour geocoding cache for OpenStreetMap Nominatim (`/api/places`).
+- **Responsive Theme**: Dark and light modes with responsive layouts for mobile, tablet, and desktop viewports.
 
 ## Tech stack
 
 | Area | Technologies |
 | --- | --- |
-| Front end | Next.js 14 App Router, React 18, TypeScript, CSS, Lucide icons |
-| AI and validation | Google Gemini API, structured JSON responses, Zod |
-| Authentication and data | Supabase Auth, PostgreSQL, Prisma ORM |
-| Location data | OpenStreetMap Nominatim |
+| **Front end** | Next.js 16 App Router, React 18, TypeScript, CSS, Lucide icons |
+| **AI & Validation** | Google Gemini API, structured JSON responses, Zod schemas |
+| **Auth & Database** | Supabase Auth, PostgreSQL, Prisma ORM |
+| **Security & Utilities** | Optimistic Concurrency Control (OCC), in-memory sliding-window rate limiting |
+| **Location Data** | OpenStreetMap Nominatim with in-memory caching |
 
 ## Run locally
 
 ```bash
 npm install
 cp .env.example .env
-npm run db:push # required after adding DATABASE_URL and DIRECT_URL
+npm run db:push # required after configuring DATABASE_URL and DIRECT_URL
 npm run dev
 ```
 
@@ -52,23 +51,14 @@ NEXT_PUBLIC_SUPABASE_URL=""
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=""
 ```
 
-Gemini is optional. Without an API key, Roamwise generates a deterministic demo itinerary and travel diary so the full planning and journal experience remains explorable. Set `GEMINI_MODEL` only when selecting a different Gemini model.
+*Note:* Gemini is optional. Without an API key, Roamwise generates deterministic demo itineraries and travel diaries so the full planning and journal experience remains explorable.
 
 For Supabase, copy the URLs from **Connect → ORM → Prisma**: use the transaction-pooler URL (port `6543`) for `DATABASE_URL` and the session-pooler URL (port `5432`) for `DIRECT_URL`.
 
-## Validation and build
+## Typecheck and validation
 
 ```bash
 npx tsc --noEmit
-npm run build
+npm run lint
 ```
 
-## Free services
-
-| Feature | Free option | Environment variable |
-| --- | --- | --- |
-| AI itineraries, briefings, diaries | [Google AI Studio](https://aistudio.google.com/apikey) | `GEMINI_API_KEY` |
-| Authentication and saved trips | [Supabase](https://supabase.com/pricing) | Supabase URL/key + database URLs |
-| Place coordinates | [OpenStreetMap Nominatim](https://operations.osmfoundation.org/policies/nominatim/) | None |
-
-Nominatim is called only for a user-triggered destination lookup and responses are cached for one day. If deploying publicly, keep usage within its [one-request-per-second policy](https://operations.osmfoundation.org/policies/nominatim/).

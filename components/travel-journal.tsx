@@ -12,6 +12,7 @@ type TravelJournalProps = {
   destination: string;
   startDate?: string;
   endDate?: string;
+  days?: import("@/lib/types").DayPlan[] | number[] | number;
   budget: number;
   currency?: string;
   initialEntries?: JournalEntry[];
@@ -20,13 +21,14 @@ type TravelJournalProps = {
   onDiaryChange?: (diary: TravelDiary) => void;
 };
 
-const moods = ["☕ Relaxed", "🤩 Excited", "😋 Foodie bliss", "🌅 Peaceful", "🧭 Adventurous", "😴 Tired but happy"];
+const moods = ["Relaxed", "Excited", "Foodie bliss", "Peaceful", "Adventurous", "Tired but happy"];
 
 export function TravelJournal({
   tripId,
   destination,
   startDate,
   endDate,
+  days,
   budget,
   currency = "USD",
   initialEntries = [],
@@ -58,13 +60,27 @@ export function TravelJournal({
   useEffect(() => setDiary(initialDiary), [initialDiary]);
 
   const tripDays = useMemo(() => {
-    if (!startDate || !endDate) return [];
-    const start = new Date(`${startDate}T00:00:00`);
-    const end = new Date(`${endDate}T00:00:00`);
-    const days: number[] = [];
-    for (let date = start, number = 1; date <= end; date.setDate(date.getDate() + 1), number += 1) days.push(number);
-    return days;
-  }, [startDate, endDate]);
+    if (Array.isArray(days) && days.length > 0) {
+      return days.map((d) => (typeof d === "number" ? d : d.day));
+    }
+    if (typeof days === "number" && days > 0) {
+      return Array.from({ length: days }, (_, i) => i + 1);
+    }
+    if (startDate && endDate) {
+      const cleanStart = startDate.includes("T") ? startDate.split("T")[0] : startDate;
+      const cleanEnd = endDate.includes("T") ? endDate.split("T")[0] : endDate;
+      if (cleanStart && cleanEnd) {
+        const start = new Date(`${cleanStart}T00:00:00Z`);
+        const end = new Date(`${cleanEnd}T00:00:00Z`);
+        if (!isNaN(start.getTime()) && !isNaN(end.getTime()) && start <= end) {
+          const diffMs = end.getTime() - start.getTime();
+          const count = Math.min(90, Math.max(1, Math.round(diffMs / 86_400_000) + 1));
+          return Array.from({ length: count }, (_, i) => i + 1);
+        }
+      }
+    }
+    return [1];
+  }, [days, startDate, endDate]);
 
   // Calculate expense summary
   const totalSpent = entries.reduce((sum, entry) => sum + (entry.expense?.amount || 0), 0);

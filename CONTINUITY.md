@@ -13,25 +13,23 @@
 - 2026-08-24 [USER] D003 ACTIVE: Keep detailed audit findings in standalone `AUDIT.md`; keep only bounded references in this ledger.
 
 ## Done (recent)
+- 2026-09-02 [CODE] Fixed Travel Journal day resolution by supporting `days` from itinerary and ISO date parsing; removed emojis from moods array.
+- 2026-09-02 [CODE] Closed remaining persistence gaps: briefing refresh, briefing Q&A, trip PATCH (packing list), and revision routes now fully enforce canonical persisted-itinerary validation and optimistic concurrency.
 - 2026-08-29 [CODE] Added canonical persisted-itinerary validation, server-authoritative journal IDs, and optimistic conflict responses for journal, diary, and revision writes.
 - 2026-08-22 [CODE] Added authenticated journal CRUD, diary generation, UI, styling, and Zod validation.
 - 2026-08-22 [CODE] Upgraded to Next.js 16 and ESLint 9; migrated dynamic params, typed routes, and lint config.
 - 2026-08-24 [TOOL] Deep audit found journal persistence validation gaps, public AI/place endpoints, stale docs/config, oversized files, and duplicated request/auth logic.
-- 2026-08-24 [TOOL] Full findings recorded in `AUDIT.md`; remediation order starts with unified persisted-itinerary validation and regression tests.
-- 2026-08-24 [TOOL] `npm run lint` passes with 8 warnings; `npx tsc --noEmit` passes.
-- 2026-08-24 [TOOL] `next build` currently fails because Turbopack worker port binding is blocked in this environment (`Operation not permitted`), even outside sandbox.
 
 ## Working set
-- 2026-08-24 [CODE] `app/api/trips/[id]/journal/route.ts`
-- 2026-08-24 [CODE] `app/api/trips/[id]/journal/diary/route.ts`
-- 2026-08-24 [CODE] `lib/planner.ts`
-- 2026-08-24 [CODE] `lib/supabase.ts`
-- 2026-08-24 [CODE] `components/travel-journal.tsx`
-- 2026-08-24 [CODE] `README.md`, `.env.example`, `.env.example.original`
+- 2026-09-02 [CODE] `components/travel-journal.tsx`
+- 2026-09-02 [CODE] `app/trips/[id]/page.tsx`
+- 2026-09-02 [CODE] `app/api/trips/[id]/briefing/route.ts`
+- 2026-09-02 [CODE] `app/api/trips/[id]/route.ts`
+- 2026-09-02 [CODE] `lib/schemas/itinerary.ts`
+- 2026-09-02 [CODE] `lib/api/trips.ts`
 
 ## Receipts
-- 2026-08-29 [TOOL] `npx tsc --noEmit` passes after persistence hardening; lint previously passed with 8 warnings.
-- 2026-08-24 [TOOL] Zod default strips unknown keys; `itinerarySchema.safeParse(trip.itinerary)` therefore drops unvalidated extras such as `journalEntries`.
-- 2026-08-24 [TOOL] Journal POST/PATCH/DELETE spread raw DB JSON into updates without validating existing entries or full itinerary.
-- 2026-08-24 [TOOL] `/api/itinerary` and `/api/places` have no auth or explicit rate limiting.
-- 2026-08-24 [TOOL] Local npm registry access was unavailable, so live `npm audit` was UNCONFIRMED.
+- 2026-09-02 [CODE] TravelJournal accepts `days` and parses ISO dates cleanly so all trip days (Day 1..N) appear in entry forms and feed filters.
+- 2026-09-02 [CODE] Briefing refresh and trip PATCH routes refactored to preserve journalEntries, diary, and checklist items under `persistedItinerarySchema` with `updateItineraryIfCurrent`.
+
+

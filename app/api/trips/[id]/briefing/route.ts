@@ -1,25 +1,27 @@
 import { NextResponse } from "next/server";
-import { generateTravelBriefing, itinerarySchema } from "@/lib/planner";
-import { prisma } from "@/lib/prisma";
-import { getAuthenticatedUser } from "@/lib/supabase";
+import { concurrentTripUpdateResponse, getOwnedTrip, invalidPersistedItineraryResponse, parsePersistedItinerary, updateItineraryIfCurrent } from "@/lib/api/trips";
+import { generateTravelBriefing } from "@/lib/planner";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: RouteContext) {
   const { id } = await params;
-  const user = await getAuthenticatedUser(request);
-  if (!user) return NextResponse.json({ error: "Sign in to generate a travel briefing." }, { status: 401 });
-  if (!process.env.DATABASE_URL || !process.env.GEMINI_API_KEY) return NextResponse.json({ error: "A database connection and GEMINI_API_KEY are required to generate a briefing." }, { status: 503 });
+  if (!process.env.GEMINI_API_KEY) return NextResponse.json({ error: "GEMINI_API_KEY is required to generate a briefing." }, { status: 503 });
+
+  const result = await getOwnedTrip(request, id, "generate a travel briefing");
+  if ("error" in result) return result.error;
+
+  const itinerary = parsePersistedItinerary(result.trip);
+  if (!itinerary.success) return invalidPersistedItineraryResponse();
+
   try {
-    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
-    if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
-    const itinerary = itinerarySchema.safeParse(trip.itinerary);
-    if (!itinerary.success) return NextResponse.json({ error: "This saved itinerary is incomplete and cannot be briefed." }, { status: 422 });
-    const briefing = await generateTravelBriefing({ destination: trip.destination, itinerary: itinerary.data });
-    const updatedTrip = await prisma.trip.update({ where: { id: trip.id }, data: { itinerary: { ...itinerary.data, briefing } } });
-    return NextResponse.json({ trip: updatedTrip });
+    const briefing = await generateTravelBriefing({ destination: result.trip.destination, itinerary: itinerary.data });
+    const updatedItinerary = { ...itinerary.data, briefing };
+    if (!await updateItineraryIfCurrent(result.trip, updatedItinerary)) return concurrentTripUpdateResponse();
+    return NextResponse.json({ trip: { ...result.trip, itinerary: updatedItinerary } });
   } catch (error) {
     console.error("Travel briefing refresh failed", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : "Could not generate this travel briefing." }, { status: 502 });
   }
 }
+

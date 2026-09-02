@@ -21,7 +21,8 @@ export async function POST(request: Request, { params }: RouteContext) {
     const updated = persistedItinerarySchema.safeParse(revision.itinerary);
     if (!updated.success) throw new Error("The revised itinerary was invalid.");
     if (!await updateItineraryIfCurrent(result.trip, updated.data)) return concurrentTripUpdateResponse();
-    return NextResponse.json({ itinerary: updated.data, summary: revision.summary, changedDayNumbers: revision.changedDayNumbers });
+    const updatedTrip = { ...result.trip, itinerary: updated.data };
+    return NextResponse.json({ trip: updatedTrip, itinerary: updated.data, summary: revision.summary, changedDayNumbers: revision.changedDayNumbers });
   } catch (error) {
     console.error("Saved trip revision failed", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : "Could not revise this itinerary." }, { status: 502 });

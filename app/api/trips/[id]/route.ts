@@ -1,38 +1,25 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { getAuthenticatedUser } from "@/lib/supabase";
-import { journalEntrySchema, packingListSchema, travelDiarySchema } from "@/lib/planner";
+import { concurrentTripUpdateResponse, getOwnedTrip, invalidPersistedItineraryResponse, parsePersistedItinerary, updateItineraryIfCurrent } from "@/lib/api/trips";
+import { journalEntrySchema, packingListSchema, persistedItinerarySchema, travelDiarySchema } from "@/lib/schemas/itinerary";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(request: Request, { params }: RouteContext) {
   const { id } = await params;
-  const user = await getAuthenticatedUser(request);
-  if (!user) return NextResponse.json({ error: "Sign in to view saved trips." }, { status: 401 });
-  if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Add DATABASE_URL to view saved trips." }, { status: 503 });
-
-  try {
-    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
-    if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
-    return NextResponse.json({ trip });
-  } catch (error) {
-    console.error("Saved trip load failed", error);
-    return NextResponse.json({ error: "Could not load this trip. Check your database connection." }, { status: 500 });
-  }
+  const result = await getOwnedTrip(request, id, "view saved trips");
+  if ("error" in result) return result.error;
+  return NextResponse.json({ trip: result.trip });
 }
 
 export async function DELETE(request: Request, { params }: RouteContext) {
   const { id } = await params;
-  const user = await getAuthenticatedUser(request);
-  if (!user) return NextResponse.json({ error: "Sign in to delete trips." }, { status: 401 });
-  if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
+  const result = await getOwnedTrip(request, id, "delete trips");
+  if ("error" in result) return result.error;
 
   try {
-    const deleted = await prisma.trip.deleteMany({
-      where: { id, userId: user.id }
-    });
-    if (deleted.count === 0) return NextResponse.json({ error: "Trip not found or unauthorized." }, { status: 404 });
+    await prisma.trip.delete({ where: { id: result.trip.id } });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Saved trip deletion failed", error);
@@ -48,30 +35,32 @@ const tripUpdateSchema = z.object({
 
 export async function PATCH(request: Request, { params }: RouteContext) {
   const { id } = await params;
-  const user = await getAuthenticatedUser(request);
-  if (!user) return NextResponse.json({ error: "Sign in to update a trip." }, { status: 401 });
-  if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database not configured." }, { status: 503 });
   const body = tripUpdateSchema.safeParse(await request.json().catch(() => null));
   if (!body.success) return NextResponse.json({ error: "Invalid trip update parameters." }, { status: 400 });
 
-  try {
-    const trip = await prisma.trip.findFirst({ where: { id, userId: user.id } });
-    if (!trip) return NextResponse.json({ error: "Trip not found." }, { status: 404 });
-    const itinerary = (trip.itinerary as Record<string, unknown>) || {};
-    const updatedItinerary = {
-      ...itinerary,
-      ...(body.data.packingList !== undefined ? { packingList: body.data.packingList } : {}),
-      ...(body.data.journalEntries !== undefined ? { journalEntries: body.data.journalEntries } : {}),
-      ...(body.data.diary !== undefined ? { diary: body.data.diary } : {}),
-    };
+  const result = await getOwnedTrip(request, id, "update a trip");
+  if ("error" in result) return result.error;
 
-    const updatedTrip = await prisma.trip.update({
-      where: { id: trip.id },
-      data: { itinerary: updatedItinerary }
-    });
+  const itinerary = parsePersistedItinerary(result.trip);
+  if (!itinerary.success) return invalidPersistedItineraryResponse();
+
+  const candidateItinerary = {
+    ...itinerary.data,
+    ...(body.data.packingList !== undefined ? { packingList: body.data.packingList } : {}),
+    ...(body.data.journalEntries !== undefined ? { journalEntries: body.data.journalEntries } : {}),
+    ...(body.data.diary !== undefined ? { diary: body.data.diary } : {}),
+  };
+
+  const validated = persistedItinerarySchema.safeParse(candidateItinerary);
+  if (!validated.success) return NextResponse.json({ error: "Invalid updated itinerary." }, { status: 400 });
+
+  try {
+    if (!await updateItineraryIfCurrent(result.trip, validated.data)) return concurrentTripUpdateResponse();
+    const updatedTrip = { ...result.trip, itinerary: validated.data };
     return NextResponse.json({ trip: updatedTrip });
   } catch (error) {
     console.error("Trip update failed", error);
     return NextResponse.json({ error: "Could not save your trip updates." }, { status: 500 });
   }
 }
+

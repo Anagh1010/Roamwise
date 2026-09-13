@@ -22,7 +22,7 @@
 }
 
 .auth-card h2 {
-  font-family: "Playfair Display";
+  font-family: var(--font-sans);
   font-size: 32px;
   font-weight: 500;
   margin: 0 0 6px;

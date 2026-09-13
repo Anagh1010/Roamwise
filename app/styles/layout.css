@@ -22,7 +22,7 @@
 }
 
 .nav-links a {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--muted);
   text-decoration: none;
 }
@@ -89,9 +89,9 @@
 }
 
 .eyebrow {
-  font-family: "DM Mono", monospace;
+  font-family: var(--font-mono);
   color: #7dcfff;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1.25px;
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@
 }
 
 .small {
-  font-size: 12px;
+  font-size: 13px;
   padding: 8px 12px;
 }
 
@@ -249,9 +249,9 @@
 }
 
 .footer p {
-  font-family: "Playfair Display";
+  font-family: var(--font-sans);
   font-style: italic;
-  font-size: 14px;
+  font-size: 15px;
   margin: 0;
   color: var(--muted);
 }

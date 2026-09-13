@@ -12,15 +12,15 @@
 }
 
 .lede {
-  font-size: 16px;
+  font-size: 17.5px;
   line-height: 1.6;
   color: var(--muted);
-  max-width: 440px;
+  max-width: 460px;
   margin-bottom: 24px;
 }
 
 .text-link {
-  font-size: 14.5px;
+  font-size: 15.5px;
   border-bottom: 1.5px solid var(--ink);
   padding-bottom: 4px;
 }
@@ -148,12 +148,12 @@
 .postcard span,
 .postcard small {
   display: block;
-  font-family: "DM Mono";
+  font-family: var(--font-mono);
   font-size: 9px;
 }
 
 .postcard b {
-  font-family: "Playfair Display";
+  font-family: var(--font-sans);
   font-size: 28px;
   display: block;
   line-height: 1.1;
@@ -209,12 +209,12 @@
 
 .steps b {
   color: #7dcfff;
-  font-family: "DM Mono";
+  font-family: var(--font-mono);
   font-size: 12px;
 }
 
 .steps h3 {
-  font-family: "Playfair Display";
+  font-family: var(--font-sans);
   font-weight: 500;
   font-size: 22px;
   margin: 9px 0 6px;

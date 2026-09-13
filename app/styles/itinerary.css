@@ -122,14 +122,14 @@
 
 .day-title span {
   color: var(--muted);
-  font-family: "DM Mono";
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   letter-spacing: 0.6px;
 }
 
 .day-title h3 {
-  font-family: "Playfair Display";
-  font-size: 27px;
+  font-family: var(--font-sans);
+  font-size: 28px;
   font-weight: 500;
   margin: 4px 0 0;
   color: var(--ink);
@@ -174,8 +174,8 @@
 }
 
 .activity time {
-  font-family: "DM Mono";
-  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
   color: var(--muted);
   padding-top: 4px;
 }
@@ -214,14 +214,14 @@
 }
 
 .activity h4 {
-  font-size: 14.5px;
+  font-size: 15.5px;
   margin: 3px 0 2px;
   color: var(--ink);
 }
 
 .place {
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12.5px;
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -238,7 +238,7 @@
 }
 
 .activity-body > p {
-  font-size: 12.5px;
+  font-size: 13.5px;
   line-height: 1.5;
   color: var(--muted);
   margin: 3px 0 0;
@@ -249,7 +249,7 @@
   display: flex;
   gap: 9px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .activity-meta span {
@@ -306,7 +306,7 @@
 }
 
 .trip-footer b {
-  font-family: "Playfair Display";
+  font-family: var(--font-sans);
   font-size: 21px;
   font-weight: 500;
   color: var(--ink);

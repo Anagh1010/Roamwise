@@ -16,7 +16,7 @@
 }
 
 .journal-header h2 {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-sans);
   font-size: 32px;
   font-weight: 500;
   margin: 4px 0 0;
@@ -306,7 +306,7 @@
 }
 
 .diary-title {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-sans);
   font-size: 32px;
   font-weight: 500;
   color: #f3f4f6;

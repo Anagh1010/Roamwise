@@ -13,6 +13,7 @@
 - 2026-08-24 [USER] D003 ACTIVE: Keep detailed audit findings in standalone `AUDIT.md`; keep only bounded references in this ledger.
 
 ## Done (recent)
+- 2026-09-13 [CODE] Replaced typography with MangaFire font stack (Google Sans/JetBrains Mono) and scaled base and component font sizes (body 16.5px, enhanced readability for cards, form fields, and itinerary).
 - 2026-09-02 [CODE] Added clickable Google Maps links for activity location names across generator and saved trip views (`app/page.tsx`, `app/trips/[id]/page.tsx`, `app/styles/itinerary.css`).
 - 2026-09-02 [CODE] Implemented Step 3 & 6: Added in-memory sliding-window rate limiting (`lib/rate-limit.ts`) for `/api/itinerary` and `/api/places`, 24h Nominatim query cache, and updated `README.md` to Next.js 16 with architecture highlights.
 - 2026-09-02 [CODE] Fixed Travel Journal day resolution by supporting `days` from itinerary and ISO date parsing; removed emojis from moods array.
@@ -21,14 +22,20 @@
 - 2026-08-22 [CODE] Added authenticated journal CRUD, diary generation, UI, styling, and Zod validation.
 
 ## Working set
-- 2026-09-02 [CODE] `app/page.tsx`
-- 2026-09-02 [CODE] `app/trips/[id]/page.tsx`
-- 2026-09-02 [CODE] `app/styles/itinerary.css`
-- 2026-09-02 [CODE] `lib/rate-limit.ts`
-- 2026-09-02 [CODE] `lib/places.ts`
-- 2026-09-02 [CODE] `README.md`
+- 2026-09-13 [CODE] `app/layout.tsx`
+- 2026-09-13 [CODE] `app/styles/variables.css`
+- 2026-09-13 [CODE] `app/styles/base.css`
+- 2026-09-13 [CODE] `tailwind.config.ts`
+- 2026-09-13 [CODE] `app/styles/planner.css`
+- 2026-09-13 [CODE] `app/styles/trips.css`
+- 2026-09-13 [CODE] `app/styles/itinerary.css`
+- 2026-09-13 [CODE] `app/styles/hero.css`
+- 2026-09-13 [CODE] `app/styles/layout.css`
+- 2026-09-13 [CODE] `app/styles/journal.css`
+- 2026-09-13 [CODE] `app/styles/auth.css`
 
 ## Receipts
+- 2026-09-13 [CODE] MangaFire font stack verified: Google Sans (`--font-sans`) and JetBrains Mono (`--font-mono`), imported via Google Fonts with preconnect in `app/layout.tsx` and variables in `app/styles/variables.css`.
 - 2026-09-02 [CODE] Activity `.place` elements are clickable external links targeting `https://www.google.com/maps/search/?api=1&query=${place}, ${destination}`.
 - 2026-09-02 [CODE] Rate limiter applies 10 req/10m for anonymous vs 30 req/10m for authenticated users on `/api/itinerary` with 429 Retry-After headers.
 - 2026-09-02 [CODE] In-memory cache in `lib/places.ts` avoids repeat Nominatim lookups within 24h TTL.

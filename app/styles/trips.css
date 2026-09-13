@@ -1,6 +1,4 @@
-/* --------------------------------------------------
-   Trips Hero
--------------------------------------------------- */
+/* --- Trips Hero --- */
 
 .trips-hero {
   background: var(--cream);
@@ -9,7 +7,7 @@
 }
 
 .trips-hero h1 {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-sans);
   font-size: 52px;
   font-weight: 500;
   margin: 0 0 10px;
@@ -18,15 +16,13 @@
 
 .trips-hero p:not(.eyebrow) {
   color: var(--muted);
-  font-size: 15.5px;
+  font-size: 16.5px;
   line-height: 1.55;
-  max-width: 440px;
+  max-width: 460px;
   margin: 0;
 }
 
-/* --------------------------------------------------
-   Trips Library States
--------------------------------------------------- */
+/* --- Trips Library States --- */
 
 .trips-library {
   padding: 48px 0 72px;
@@ -39,7 +35,7 @@
   justify-content: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .trips-status p {
@@ -62,7 +58,7 @@
 
 .account-prompt h2,
 .empty-trips h2 {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-sans);
   font-size: 32px;
   font-weight: 500;
   line-height: 1.08;
@@ -88,9 +84,7 @@
   margin-bottom: 8px;
 }
 
-/* --------------------------------------------------
-   Library Auth Form
--------------------------------------------------- */
+/* --- Library Auth Form --- */
 
 .library-auth {
   display: grid;
@@ -128,9 +122,7 @@
   text-align: left;
 }
 
-/* --------------------------------------------------
-   Trip Grid & Cards
--------------------------------------------------- */
+/* --- Trip Grid & Cards --- */
 
 .trip-grid {
   display: grid;
@@ -174,8 +166,8 @@
 }
 
 .trip-card h2 {
-  font-family: "Playfair Display", serif;
-  letter-spacing: -0.6px;
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
   font-size: 25px;
   line-height: 1.1;
   font-weight: 500;
@@ -185,7 +177,7 @@
 
 .trip-dates {
   color: var(--subtle);
-  font-size: 12px;
+  font-size: 13px;
   margin: 0 0 20px;
 }
 
@@ -244,9 +236,7 @@
   cursor: not-allowed;
 }
 
-/* --------------------------------------------------
-   Saved Trip Detail
--------------------------------------------------- */
+/* --- Saved Trip Detail --- */
 
 .saved-itinerary {
   padding-top: 40px;

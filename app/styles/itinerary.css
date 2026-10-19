@@ -36,13 +36,15 @@
 .cost span,
 .cost small {
   display: block;
+  font-family: var(--font-mono);
   color: var(--muted);
   font-size: 11px;
 }
 
 .cost b {
-  font-size: 26px;
-  letter-spacing: -1px;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  letter-spacing: -0.5px;
   display: block;
   margin: 2px 0;
   color: var(--ink);
@@ -54,7 +56,8 @@
   background: var(--surface);
   border: 1px solid var(--surface-raised);
   color: var(--ink);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -84,10 +87,11 @@
 .tab b,
 .tab span {
   display: block;
+  font-family: var(--font-mono);
 }
 
 .tab b {
-  font-size: 13.5px;
+  font-size: 13px;
 }
 
 .tab span {
@@ -220,8 +224,9 @@
 }
 
 .place {
+  font-family: var(--font-mono);
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 12px;
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -249,7 +254,8 @@
   display: flex;
   gap: 9px;
   color: var(--muted);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
 }
 
 .activity-meta span {
@@ -266,11 +272,12 @@
 }
 
 .add-activity {
+  font-family: var(--font-mono);
   border: 1px dashed #7aa2f7;
   color: #7aa2f7;
   background: #24283b;
   padding: 8px 12px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   border-radius: 4px;
   display: inline-flex;
@@ -313,12 +320,14 @@
 }
 
 .trip-footer span {
+  font-family: var(--font-mono);
   color: var(--muted);
   font-size: 11.5px;
   margin-top: 4px;
 }
 
 .save-message {
+  font-family: var(--font-mono);
   display: block;
   color: #73daca;
   font-size: 11.5px;
@@ -332,10 +341,11 @@
 }
 
 .map-link {
+  font-family: var(--font-mono);
   display: inline-flex;
   gap: 4px;
   align-items: center;
-  font-size: 12.5px;
+  font-size: 12px;
   color: #7aa2f7;
   font-weight: 600;
   text-decoration: none;
@@ -367,6 +377,7 @@
 
 .trip-reviser label {
   display: block;
+  font-family: var(--font-mono);
   color: #7dcfff;
   font-size: 12px;
   font-weight: 700;
@@ -391,6 +402,7 @@
 .trip-reviser .revision-message,
 .trip-reviser .revision-error {
   grid-column: 1 / -1;
+  font-family: var(--font-mono);
   margin: 0;
   font-size: 12px;
 }
@@ -413,6 +425,7 @@
 
 .activity-editor label {
   display: block;
+  font-family: var(--font-mono);
   color: #7dcfff;
   font-size: 12px;
   font-weight: 700;
@@ -420,8 +433,8 @@
 }
 
 .activity-editor input,
-.activity-editor select,
-.activity-editor textarea {
+.activity-editor select {
+  font-family: var(--font-mono);
   display: block;
   width: 100%;
   background: transparent;
@@ -430,7 +443,7 @@
   padding: 7px 0;
   outline: 0;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .activity-editor select {

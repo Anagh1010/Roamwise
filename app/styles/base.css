@@ -71,6 +71,7 @@ h1 i {
 
 .error {
   color: var(--coral);
+  font-family: var(--font-mono);
   font-size: 12px;
   margin: 0 0 11px;
 }

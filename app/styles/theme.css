@@ -397,6 +397,7 @@ html[data-theme="light"] .footer p {
 -------------------------------------------------- */
 
 .theme-toggle {
+  font-family: var(--font-mono);
   display: inline-flex;
   align-items: center;
   gap: 6px;

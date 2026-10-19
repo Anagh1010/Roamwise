@@ -20,7 +20,8 @@
 }
 
 .text-link {
-  font-size: 15.5px;
+  font-family: var(--font-mono);
+  font-size: 14px;
   border-bottom: 1.5px solid var(--ink);
   padding-bottom: 4px;
 }

@@ -38,6 +38,7 @@
 
 .auth-card label {
   display: block;
+  font-family: var(--font-mono);
   color: #7dcfff;
   font-size: 12px;
   font-weight: 700;
@@ -47,13 +48,14 @@
 .auth-card input {
   display: block;
   width: 100%;
+  font-family: var(--font-mono);
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--surface-raised);
   padding: 7px 0;
   outline: 0;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .auth-close {
@@ -67,19 +69,22 @@
 }
 
 .auth-message {
+  font-family: var(--font-mono);
   color: var(--coral);
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 1.45;
   margin: 12px 0 0;
 }
 
 .auth-submit {
+  font-family: var(--font-mono);
   width: 100%;
   justify-content: center;
   margin-top: 18px;
 }
 
 .auth-switch {
+  font-family: var(--font-mono);
   border: 0;
   background: none;
   display: block;

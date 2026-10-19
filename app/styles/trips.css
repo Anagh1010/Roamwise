@@ -38,14 +38,8 @@
   font-size: 15px;
 }
 
-.trips-status p {
-  margin: 0;
-}
-
-.trips-error {
-  flex-direction: column;
-  color: var(--coral);
-}
+.trips-status p { margin: 0; }
+.trips-error { flex-direction: column; color: var(--coral); }
 
 .account-prompt,
 .empty-trips {
@@ -95,6 +89,7 @@
 
 .library-auth label {
   display: block;
+  font-family: var(--font-mono);
   color: #7dcfff;
   font-size: 12px;
   font-weight: 700;
@@ -103,18 +98,20 @@
 .library-auth input {
   display: block;
   width: 100%;
+  font-family: var(--font-mono);
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--surface-raised);
   padding: 7px 0;
   outline: 0;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .library-auth .auth-message,
 .library-auth .auth-switch {
   grid-column: 1 / -1;
+  font-family: var(--font-mono);
 }
 
 .library-auth .auth-switch {
@@ -155,6 +152,7 @@
   align-items: center;
   gap: 10px;
   color: var(--muted);
+  font-family: var(--font-mono);
   font-size: 11px;
 }
 
@@ -177,7 +175,8 @@
 
 .trip-dates {
   color: var(--subtle);
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   margin: 0 0 20px;
 }
 
@@ -202,6 +201,7 @@
   background: var(--surface);
   color: #73daca;
   padding: 3px 8px;
+  font-family: var(--font-mono);
   font-size: 10.5px;
 }
 
@@ -257,6 +257,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  font-family: var(--font-mono);
 }
 
 .detail-top-bar {
@@ -271,6 +272,7 @@
 }
 
 .delete-detail-btn {
+  font-family: var(--font-mono);
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -279,7 +281,7 @@
   padding: 6px 10px;
   background: #281a24;
   color: #f7768e;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
